@@ -1,27 +1,19 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(SDL2-sort VERSION 0.1.0)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMAKE")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/sdl2")
 
 include(CTest)
 enable_testing()
 
-file(GLOB TARGET_SRC "./src/*.cpp" )
+set(TARGET_SRC "")
+list(APPEND TARGET_SRC
+    src/main.cpp
+)
+
+find_package(SDL2 REQUIRED)
+
 add_executable(${PROJECT_NAME} ${TARGET_SRC})
-
-FIND_PACKAGE(SDL2 CONFIG REQUIRED)
-Message("")
-Message( STATUS "FINDING SDL2" )
-IF (${SDL2_FOUND})
-    Message( STATUS "SDL2_FOUND: " ${SDL2_FOUND})
-    Message( STATUS "SDL2_INCLUDE_DIR:" ${SDL2_INCLUDE_DIRS})
-    Message( STATUS "SDL2_LIBRARY: " ${SDL2_LIBRARIES})
-ELSE()
-    Message( STATUS "SDL2_FOUND: " ${SDL2_FOUND})
-    Message( FATAL_ERROR "SDL2 NOT FOUND" )
-ENDIF()
-
-include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} SDL2::Main)
