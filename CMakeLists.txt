@@ -10,8 +10,11 @@ enable_testing()
 
 set(TARGET_SRC "")
 list(APPEND TARGET_SRC
-    src/main.cpp
+    src/engine.cc
+    src/main.cc
 )
+
+include_directories(include)
 
 find_package(SDL2 REQUIRED)
 
