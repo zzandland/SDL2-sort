@@ -8,13 +8,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/sdl2")
 include(CTest)
 enable_testing()
 
+include_directories(include)
+
 set(TARGET_SRC "")
 list(APPEND TARGET_SRC
+    src/screen.cc
     src/engine.cc
     src/main.cc
 )
-
-include_directories(include)
 
 find_package(SDL2 REQUIRED)
 

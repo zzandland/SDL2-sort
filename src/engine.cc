@@ -5,10 +5,7 @@
 
 #include "engine.h"
 
-const Uint32 winWidth = 1024;
-const Uint32 winHeight = 768;
-
-Engine::Engine() : init_success_(true) {
+Engine::Engine(const Uint32 width, const Uint32 height) : init_success_(true) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Could not initialize SDL: " << SDL_GetError();
     init_success_ = false;
@@ -20,9 +17,8 @@ Engine::Engine() : init_success_(true) {
   }
 
   window_ = SDL_CreateWindow(
-      "SDL2Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, winWidth,
-      winHeight,
-      SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+      "SDL2Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
+      height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
   if (nullptr == window_) {
     std::cerr << "Could not create window: " << SDL_GetError() << '\n';
@@ -30,19 +26,19 @@ Engine::Engine() : init_success_(true) {
     return;
   }
 
-  renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
-  if (nullptr == renderer_) {
+  SDL_Renderer* renderer = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
+  if (nullptr == renderer) {
     std::cerr << "Could not create renderer: " << SDL_GetError() << '\n';
     init_success_ = false;
     return;
   }
 
   context_ = SDL_GL_CreateContext(window_);
+  screen_ = new Screen(renderer, width, height);
 }
 
 Engine::~Engine() {
-  SDL_DestroyRenderer(renderer_);
-  renderer_ = nullptr;
+  delete screen_;
 
   SDL_DestroyWindow(window_);
   window_ = nullptr;
@@ -60,9 +56,7 @@ bool Engine::Run() {
         quit = true;
       }
     }
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer_);
-    SDL_RenderPresent(renderer_);
+    screen_->Draw();
   }
 
   return true;

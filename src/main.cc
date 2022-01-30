@@ -7,8 +7,11 @@
 
 #include "engine.h"
 
+const Uint32 winWidth = 1024;
+const Uint32 winHeight = 768;
+
 int main(int argc, char **argv) {
-  Engine *engine = new Engine();
+  Engine *engine = new Engine(winWidth, winHeight);
 
   // constructor indicated a failure, early exit the program
   if (!engine->init_success_) {
