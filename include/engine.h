@@ -1,4 +1,7 @@
+#pragma once
+
 #include <SDL.h>
+
 #include "screen.h"
 
 class Engine {

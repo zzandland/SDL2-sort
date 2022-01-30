@@ -1,4 +1,8 @@
+#pragma once
+
 #include <SDL.h>
+
+#include "diagram.h"
 
 class Screen {
  public:
@@ -10,4 +14,5 @@ class Screen {
   Uint32 width_;
   Uint32 height_;
   SDL_Renderer* renderer_;
+  Diagram* diagram_;
 };
