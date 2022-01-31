@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
   }
 
   try {
-    bool success = engine->Run();
+    int success = engine->Run();
     delete engine;
-    return EXIT_SUCCESS;
+    return success;
   } catch (const std::runtime_error &error) {
     std::string error_msg =
         std::string("Caught a fatal error: ") + std::string(error.what());

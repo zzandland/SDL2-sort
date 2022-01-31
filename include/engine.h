@@ -12,11 +12,10 @@ class Engine {
   Engine(const Uint32 width, const Uint32 height);
   ~Engine();
   bool InitCheck();
-  bool Run();
+  int Run();
 
  private:
   SDL_Window* window_;
   SDL_GLContext context_;
-  Screen* screen_;
   Sorter* sorter_;
 };

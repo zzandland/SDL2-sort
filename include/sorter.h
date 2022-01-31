@@ -3,15 +3,16 @@
 #include <iostream>
 #include <vector>
 
-struct Change {
-  int a, b;
-  bool isSwap;
-};
+#include "screen.h"
 
 class Sorter {
  public:
-  std::vector<unsigned int> data_;
+  Sorter(Screen *screen, size_t size);
+  ~Sorter();
+  int Randomize();
+  int InsertionSort();
 
-  Sorter(size_t size);
-  Change Step();
+ private:
+  std::vector<unsigned int> data_;
+  Screen *screen_;
 };

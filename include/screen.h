@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include "diagram.h"
+#include "diagram/diagram.h"
 
 class Screen {
  public:

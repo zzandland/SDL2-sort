@@ -12,7 +12,8 @@ include_directories(include)
 
 set(TARGET_SRC "")
 list(APPEND TARGET_SRC
-    src/histogram.cc
+    include/helper.h
+    src/diagram/histogram.cc
     src/screen.cc
     src/engine.cc
     src/sorter.cc

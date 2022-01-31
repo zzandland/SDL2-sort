@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "diagram.h"
+#include "diagram/diagram.h"
 
 class Histogram : public Diagram {
  public:

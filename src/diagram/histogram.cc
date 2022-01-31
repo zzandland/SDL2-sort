@@ -1,4 +1,4 @@
-#include "histogram.h"
+#include "diagram/histogram.h"
 
 #include <algorithm>
 #include <iostream>
@@ -43,4 +43,11 @@ void Histogram::Draw(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
   SDL_RenderPresent(renderer);
 }
 
-void Histogram::Swap(size_t a, size_t b) { std::swap(rects_[a], rects_[b]); }
+void Histogram::Swap(size_t a, size_t b) {
+  Sint32 h = rects_[a].h;
+  Sint32 y = rects_[a].y;
+  rects_[a].h = rects_[b].h;
+  rects_[a].y = rects_[b].y;
+  rects_[b].h = h;
+  rects_[b].y = y;
+}

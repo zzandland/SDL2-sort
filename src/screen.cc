@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "histogram.h"
+#include "diagram/histogram.h"
 
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height)
     : renderer_(renderer), width_(width), height_(height) {
