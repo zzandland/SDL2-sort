@@ -13,4 +13,6 @@ Screen::~Screen() {
   renderer_ = nullptr;
 }
 
-void Screen::Draw() { diagram_->Draw(renderer_); }
+void Screen::Draw(size_t a, size_t b, bool isSwap) { 
+  diagram_->Draw(renderer_, a, b, isSwap);
+}

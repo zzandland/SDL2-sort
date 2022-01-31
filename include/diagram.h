@@ -6,5 +6,9 @@
 
 class Diagram {
  public:
-  virtual void Draw(SDL_Renderer* renderer) = 0;
+  virtual void Draw(SDL_Renderer* renderer, size_t a, size_t b,
+                    bool isSwap) = 0;
+
+ private:
+  virtual void Swap(size_t a, size_t b) = 0;
 };

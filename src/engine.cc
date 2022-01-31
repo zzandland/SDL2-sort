@@ -46,6 +46,10 @@ Engine::~Engine() {
   SDL_Quit();
 }
 
+bool Engine::InitCheck() {
+  return init_success_;
+}
+
 bool Engine::Run() {
   // A basic main loop to prevent blocking
   bool quit = false;
@@ -56,7 +60,11 @@ bool Engine::Run() {
         quit = true;
       }
     }
-    screen_->Draw();
+    Change c = {0, 5, true}; // TODO: test change struct
+    screen_->Draw(c.a, c.b);
+    if (c.isSwap) {
+      screen_->Draw(c.a, c.b, true);
+    }
   }
 
   return true;

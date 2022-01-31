@@ -13,8 +13,8 @@ const Uint32 winHeight = 768;
 int main(int argc, char **argv) {
   Engine *engine = new Engine(winWidth, winHeight);
 
-  // constructor indicated a failure, early exit the program
-  if (!engine->init_success_) {
+  if (!engine->InitCheck()) {
+    // constructor indicated a failure, early exit the program
     delete engine;
     return EXIT_FAILURE;
   }

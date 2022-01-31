@@ -8,7 +8,7 @@ class Screen {
  public:
   Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height);
   ~Screen();
-  void Draw();
+  void Draw(size_t a, size_t b, bool isSwap = false);
 
  private:
   Uint32 width_;
