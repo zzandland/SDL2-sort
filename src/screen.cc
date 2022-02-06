@@ -2,9 +2,9 @@
 
 #include "diagram/histogram.h"
 
-Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height)
+Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height, const Uint32 size)
     : renderer_(renderer), width_(width), height_(height) {
-  diagram_ = new Histogram(128, width, height);
+  diagram_ = new Histogram(renderer, size, width, height);
 }
 
 Screen::~Screen() {
@@ -13,6 +13,6 @@ Screen::~Screen() {
   renderer_ = nullptr;
 }
 
-void Screen::Draw(size_t a, size_t b, bool isSwap) { 
-  diagram_->Draw(renderer_, a, b, isSwap);
+void Screen::Update(size_t a, size_t b, bool isSwap) { 
+  diagram_->Update(renderer_, a, b, isSwap);
 }

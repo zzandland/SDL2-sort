@@ -18,7 +18,7 @@ int Sorter::Randomize() {
   srand(seed);
   for (size_t i = data_.size() - 1; i > 0; --i) {
     size_t j = rand() % (i + 1);
-    screen_->Draw(i, j, true);
+    screen_->Update(i, j, true);
     std::swap(data_[i], data_[j]);
     if (EXIT_FAILURE == helper::HandleSDLEvent()) {
       return EXIT_FAILURE;
@@ -43,12 +43,12 @@ int Sorter::InsertionSort() {
         min = data_[j];
         k = j;
       }
-      screen_->Draw(i, j);
+      screen_->Update(i, j);
       if (EXIT_FAILURE == helper::HandleSDLEvent()) {
         return EXIT_FAILURE;
       }
     }
-    screen_->Draw(i, k, true);
+    screen_->Update(i, k, true);
     std::swap(data_[i], data_[k]);
     if (EXIT_FAILURE == helper::HandleSDLEvent()) {
       return EXIT_FAILURE;

@@ -1,12 +1,16 @@
+#include <windows.h>
+
 #include "diagram/histogram.h"
 
 #include <algorithm>
 #include <iostream>
 
-Histogram::Histogram(size_t size, Uint32 screen_width, Uint32 screen_height) {
+Histogram::Histogram(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
+                     Uint32 screen_height) {
   const Sint32 rect_width = screen_width / size;
   Sint32 rect_height;
   rects_.resize(size);
+  SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
 
   for (size_t i = 0; i < size; ++i) {
     rect_height = (screen_height / size) * (i + 1);
@@ -15,20 +19,18 @@ Histogram::Histogram(size_t size, Uint32 screen_width, Uint32 screen_height) {
                      rect_height};
     rects_[i] = rect;
   }
+
+  SDL_RenderDrawRects(renderer, &rects_[0], rects_.size());
 }
 
-void Histogram::Draw(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
+void Histogram::Update(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
+  char buff[100];
   if (isSwap) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderDrawRect(renderer, &rects_[a]);
+    SDL_RenderDrawRect(renderer, &rects_[b]);
     Swap(a, b);
   }
-
-  // reset screen
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-  SDL_RenderClear(renderer);
-
-  // draw all rectangles first
-  SDL_SetRenderDrawColor(renderer, 170, 183, 184, 0);
-  SDL_RenderDrawRects(renderer, &rects_[0], rects_.size());
 
   if (isSwap) {
     SDL_SetRenderDrawColor(renderer, 165, 105, 189, SDL_ALPHA_OPAQUE);
@@ -41,6 +43,9 @@ void Histogram::Draw(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
   SDL_RenderFillRect(renderer, &rects_[b]);
 
   SDL_RenderPresent(renderer);
+
+  Histogram::ResetRect(renderer, a);
+  Histogram::ResetRect(renderer, b);
 }
 
 void Histogram::Swap(size_t a, size_t b) {
@@ -50,4 +55,14 @@ void Histogram::Swap(size_t a, size_t b) {
   rects_[a].y = rects_[b].y;
   rects_[b].h = h;
   rects_[b].y = y;
+}
+
+void Histogram::ResetRect(SDL_Renderer* renderer, size_t rect_index) {
+  // After rendering remove colors in the current rectangles
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderFillRect(renderer, &rects_[rect_index]);
+
+  // Draw the outline of the rectangles again
+  SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
+  SDL_RenderDrawRect(renderer, &rects_[rect_index]);
 }

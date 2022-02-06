@@ -37,8 +37,10 @@ Engine::Engine(const Uint32 width, const Uint32 height) : init_success_(true) {
 
   context_ = SDL_GL_CreateContext(window_);
 
-  Screen* screen = new Screen(renderer, width, height);
-  sorter_ = new Sorter(screen, 128);
+  const Uint32 size = 256;
+
+  Screen* screen = new Screen(renderer, width, height, size);
+  sorter_ = new Sorter(screen, size);
 }
 
 Engine::~Engine() {
