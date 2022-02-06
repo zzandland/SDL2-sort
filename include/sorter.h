@@ -9,8 +9,8 @@ class Sorter {
  public:
   Sorter(Screen *screen, size_t size);
   ~Sorter();
-  int Randomize();
-  int InsertionSort();
+  void Randomize();
+  void InsertionSort();
 
  private:
   std::vector<unsigned int> data_;

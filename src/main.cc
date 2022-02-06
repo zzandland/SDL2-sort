@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "engine.h"
+#include "helper.h"
 
 const Uint32 winWidth = 1024;
 const Uint32 winHeight = 768;
@@ -20,9 +21,12 @@ int main(int argc, char **argv) {
   }
 
   try {
-    int success = engine->Run();
+    engine->Run();
     delete engine;
-    return success;
+    return EXIT_SUCCESS;
+  } catch (const sdl_exception::EarlyQuit &) {
+    delete engine;
+    return EXIT_SUCCESS;
   } catch (const std::runtime_error &error) {
     std::string error_msg =
         std::string("Caught a fatal error: ") + std::string(error.what());

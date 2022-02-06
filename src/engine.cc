@@ -54,14 +54,8 @@ Engine::~Engine() {
 
 bool Engine::InitCheck() { return init_success_; }
 
-int Engine::Run() {
-  if (EXIT_FAILURE == helper::HandleSDLEvent()) {
-    return EXIT_FAILURE;
+void Engine::Run() {
+  while (true) {
+    sorter_->InsertionSort();
   }
-
-  if (EXIT_FAILURE == sorter_->InsertionSort()) {
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
 }

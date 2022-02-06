@@ -11,8 +11,7 @@ Sorter::Sorter(Screen *screen, size_t size) : screen_(screen) {
 
 Sorter::~Sorter() { delete screen_; }
 
-int Sorter::Randomize() {
-  SDL_Event event;
+void Sorter::Randomize() {
   size_t len = data_.size();
   size_t seed = (unsigned)time(NULL);
   srand(seed);
@@ -20,20 +19,13 @@ int Sorter::Randomize() {
     size_t j = rand() % (i + 1);
     screen_->Update(i, j, true);
     std::swap(data_[i], data_[j]);
-    if (EXIT_FAILURE == helper::HandleSDLEvent()) {
-      return EXIT_FAILURE;
-    }
   }
-  return 0;
 }
 
-int Sorter::InsertionSort() {
-  if (Randomize() < 0) {
-    return -1;
-  }
-
+void Sorter::InsertionSort() {
+  Randomize();
+  
   size_t len = data_.size();
-  SDL_Event event;
   for (size_t i = 0; i < len; ++i) {
     // find the smallest
     Uint32 min = data_[i];
@@ -44,16 +36,8 @@ int Sorter::InsertionSort() {
         k = j;
       }
       screen_->Update(i, j);
-      if (EXIT_FAILURE == helper::HandleSDLEvent()) {
-        return EXIT_FAILURE;
-      }
     }
     screen_->Update(i, k, true);
     std::swap(data_[i], data_[k]);
-    if (EXIT_FAILURE == helper::HandleSDLEvent()) {
-      return EXIT_FAILURE;
-    }
   }
-
-  return 0;
 }

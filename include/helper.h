@@ -2,15 +2,26 @@
 
 #include <SDL.h>
 
-namespace helper {
+#include <exception>
 
-inline int HandleSDLEvent() {
+namespace sdl_exception {
+class EarlyQuit : public std::exception {
+  using std::exception::exception;
+};
+}  // namespace SDL_Event
+
+namespace helper {
+enum class SDLEventType {
+  kNoEvent = 0,
+};
+
+inline SDLEventType HandleSDLEvent() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT) {
-      return EXIT_FAILURE;
+      throw sdl_exception::EarlyQuit();
     }
   }
-  return EXIT_SUCCESS;
+  return SDLEventType::kNoEvent;
 }
 }  // namespace helper

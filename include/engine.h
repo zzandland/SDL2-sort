@@ -12,7 +12,7 @@ class Engine {
   Engine(const Uint32 width, const Uint32 height);
   ~Engine();
   bool InitCheck();
-  int Run();
+  void Run();
 
  private:
   SDL_Window* window_;
