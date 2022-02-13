@@ -2,15 +2,17 @@
 #include <windows.h>
 #endif
 #include <iostream>
+#include <sstream>
 
 #include "engine.h"
 #include "helper.h"
 
-Engine::Engine(const Uint32 width, const Uint32 height) : init_success_(true) {
+std::ostringstream err_msg;
+
+Engine::Engine(const Uint32 width, const Uint32 height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cout << "Could not initialize SDL: " << SDL_GetError();
-    init_success_ = false;
-    return;
+    err_msg << "Could not initialize SDL: " << SDL_GetError() << '\n';
+    throw std::runtime_error(err_msg.str());
   }
 
   if (!(SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))) {
@@ -22,17 +24,15 @@ Engine::Engine(const Uint32 width, const Uint32 height) : init_success_(true) {
       height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
   if (nullptr == window_) {
-    std::cerr << "Could not create window: " << SDL_GetError() << '\n';
-    init_success_ = false;
-    return;
+    err_msg << "Could not create window: " << SDL_GetError() << '\n';
+    throw std::runtime_error(err_msg.str());
   }
 
   SDL_Renderer* renderer =
       SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
   if (nullptr == renderer) {
-    std::cerr << "Could not create renderer: " << SDL_GetError() << '\n';
-    init_success_ = false;
-    return;
+    err_msg << "Could not create renderer: " << SDL_GetError() << '\n';
+    throw std::runtime_error(err_msg.str());
   }
 
   context_ = SDL_GL_CreateContext(window_);
@@ -51,8 +51,6 @@ Engine::~Engine() {
 
   SDL_Quit();
 }
-
-bool Engine::InitCheck() { return init_success_; }
 
 void Engine::Run() {
   while (true) {

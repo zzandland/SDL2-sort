@@ -7,11 +7,8 @@
 
 class Engine {
  public:
-  bool init_success_;
-
   Engine(const Uint32 width, const Uint32 height);
   ~Engine();
-  bool InitCheck();
   void Run();
 
  private:
