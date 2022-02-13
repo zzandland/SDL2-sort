@@ -2,7 +2,8 @@
 
 #include "helper.h"
 
-Sorter::Sorter(Screen *screen, size_t size) : screen_(screen), running_(false), size_(size) {
+Sorter::Sorter(Screen *screen, size_t size)
+    : screen_(screen), running_(false), size_(size), selected_(1) {
   Init();
 }
 
@@ -26,16 +27,35 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_SPACE:
           running_ = !running_;
           if (running_) {
-            InsertionSort();
+            Sort();
           } else {
             screen_->Init();
             Init();
           }
           break;
+        case SDLK_1:
+          selected_ = 1;
+          break;
+        case SDLK_2:
+          selected_ = 2;
+          break;
         default:
           break;
       }
     }
+  }
+}
+
+void Sorter::Sort() {
+  switch (selected_) {
+    case 1:
+      InsertionSort();
+      break;
+    case 2:
+      BubbleSort();
+      break;
+    default:
+      break;
   }
 }
 
@@ -53,12 +73,11 @@ void Sorter::Randomize() {
 void Sorter::InsertionSort() {
   Randomize();
 
-  size_t len = data_.size();
-  for (size_t i = 0; i < len; ++i) {
+  for (size_t i = 0; i < size_; ++i) {
     // find the smallest
     Uint32 min = data_[i];
     Uint32 k = i;
-    for (size_t j = i + 1; j < len; ++j) {
+    for (size_t j = i + 1; j < size_; ++j) {
       if (data_[j] < min) {
         min = data_[j];
         k = j;
@@ -71,6 +90,26 @@ void Sorter::InsertionSort() {
     if (!running_) return;
     screen_->Update(i, k, true);
     std::swap(data_[i], data_[k]);
+  }
+
+  running_ = false;
+}
+
+void Sorter::BubbleSort() 
+{
+  Randomize();
+
+  for (size_t i = size_ - 1; i > 0; --i) {
+    for (size_t j = 0; j < i; ++j) {
+      PollAndHandleSDLEvent();
+      if (!running_) return;
+      screen_->Update(j, j + 1);
+      // swap if left element is greater than the right element
+      if (data_[j] > data_[j + 1]) {
+        screen_->Update(j, j + 1, true);
+        std::swap(data_[j], data_[j + 1]);
+      }
+    }
   }
 
   running_ = false;

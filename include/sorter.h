@@ -9,15 +9,18 @@ class Sorter {
  public:
   Sorter(Screen *screen, size_t size);
   ~Sorter();
+  void PollAndHandleSDLEvent();
   void Randomize();
   void InsertionSort();
-  void PollAndHandleSDLEvent();
+  void BubbleSort();
 
  private:
   std::vector<unsigned int> data_;
   Screen *screen_;
   bool running_;
   size_t size_;
+  Uint8 selected_;
 
   void Init();
+  void Sort();
 };
