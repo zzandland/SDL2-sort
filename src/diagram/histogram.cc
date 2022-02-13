@@ -1,11 +1,16 @@
-#include <windows.h>
-
 #include "diagram/histogram.h"
+
+#include <windows.h>
 
 #include <algorithm>
 #include <iostream>
 
 Histogram::Histogram(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
+                     Uint32 screen_height) {
+  Init(renderer, size, screen_width, screen_height);
+}
+
+void Histogram::Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
                      Uint32 screen_height) {
   const Sint32 rect_width = screen_width / size;
   Sint32 rect_height;
@@ -21,9 +26,11 @@ Histogram::Histogram(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
   }
 
   SDL_RenderDrawRects(renderer, &rects_[0], rects_.size());
+  SDL_RenderPresent(renderer);
 }
 
-void Histogram::Update(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
+void Histogram::Update(SDL_Renderer* renderer, size_t a, size_t b,
+                       bool isSwap) {
   char buff[100];
   if (isSwap) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);

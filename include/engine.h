@@ -5,6 +5,10 @@
 #include "screen.h"
 #include "sorter.h"
 
+enum class SDLEventType {
+  kNoEvent = 0,
+};
+
 class Engine {
  public:
   Engine(const Uint32 width, const Uint32 height);

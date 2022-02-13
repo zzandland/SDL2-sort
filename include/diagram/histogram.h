@@ -8,6 +8,8 @@ class Histogram : public Diagram {
  public:
   Histogram(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
             Uint32 screen_height);
+  void Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
+            Uint32 screen_height);
   void Update(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap);
 
  private:

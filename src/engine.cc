@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "engine.h"
-#include "helper.h"
 
 std::ostringstream err_msg;
 
@@ -54,6 +53,6 @@ Engine::~Engine() {
 
 void Engine::Run() {
   while (true) {
-    sorter_->InsertionSort();
+    sorter_->PollAndHandleSDLEvent();
   }
 }
