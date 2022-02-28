@@ -11,8 +11,9 @@ class Sorter {
   ~Sorter();
   void PollAndHandleSDLEvent();
   void Randomize();
-  void InsertionSort();
   void BubbleSort();
+  void InsertionSort();
+  void SelectionSort();
 
  private:
   std::vector<unsigned int> data_;

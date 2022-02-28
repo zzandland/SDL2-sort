@@ -39,6 +39,9 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_2:
           selected_ = 2;
           break;
+        case SDLK_3:
+          selected_ = 3;
+          break;
         default:
           break;
       }
@@ -49,11 +52,13 @@ void Sorter::PollAndHandleSDLEvent() {
 void Sorter::Sort() {
   switch (selected_) {
     case 1:
-      InsertionSort();
-      break;
-    case 2:
       BubbleSort();
       break;
+    case 2:
+      InsertionSort();
+      break;
+    case 3:
+      SelectionSort();
     default:
       break;
   }
@@ -70,7 +75,41 @@ void Sorter::Randomize() {
   }
 }
 
+void Sorter::BubbleSort() 
+{
+  Randomize();
+
+  for (size_t i = size_ - 1; i > 0; --i) {
+    for (size_t j = 0; j < i; ++j) {
+      PollAndHandleSDLEvent();
+      if (!running_) return;
+      screen_->Update(j, j + 1);
+      // swap if left element is greater than the right element
+      if (data_[j] > data_[j + 1]) {
+        screen_->Update(j, j + 1, true);
+        std::swap(data_[j], data_[j + 1]);
+      }
+    }
+  }
+
+  running_ = false;
+}
+
 void Sorter::InsertionSort() {
+  Randomize();
+
+  for (size_t i = 1; i < size_; ++i) {
+    for (size_t j = i - 1; j >= 0 && data_[j] > data_[j + 1]; --j) {
+      PollAndHandleSDLEvent();
+      if (!running_) return;
+      // swap
+      screen_->Update(j, j + 1, true);
+      std::swap(data_[j], data_[j + 1]);
+    }
+  }
+}
+
+void Sorter::SelectionSort() {
   Randomize();
 
   for (size_t i = 0; i < size_; ++i) {
@@ -90,26 +129,6 @@ void Sorter::InsertionSort() {
     if (!running_) return;
     screen_->Update(i, k, true);
     std::swap(data_[i], data_[k]);
-  }
-
-  running_ = false;
-}
-
-void Sorter::BubbleSort() 
-{
-  Randomize();
-
-  for (size_t i = size_ - 1; i > 0; --i) {
-    for (size_t j = 0; j < i; ++j) {
-      PollAndHandleSDLEvent();
-      if (!running_) return;
-      screen_->Update(j, j + 1);
-      // swap if left element is greater than the right element
-      if (data_[j] > data_[j + 1]) {
-        screen_->Update(j, j + 1, true);
-        std::swap(data_[j], data_[j + 1]);
-      }
-    }
   }
 
   running_ = false;
