@@ -42,6 +42,15 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_3:
           selected_ = 3;
           break;
+        case SDLK_z:
+          set_size(128);
+          break;
+        case SDLK_x:
+          set_size(256);
+          break;
+        case SDLK_c:
+          set_size(512);
+          break;
         default:
           break;
       }
@@ -64,6 +73,12 @@ void Sorter::Sort() {
   }
 }
 
+void Sorter::set_size(const Uint32 size) {
+  size_ = size;
+  Init();
+  screen_->set_size(size);
+}
+
 void Sorter::Randomize() {
   size_t len = data_.size();
   size_t seed = (unsigned)time(NULL);
@@ -75,8 +90,7 @@ void Sorter::Randomize() {
   }
 }
 
-void Sorter::BubbleSort() 
-{
+void Sorter::BubbleSort() {
   Randomize();
 
   for (size_t i = size_ - 1; i > 0; --i) {

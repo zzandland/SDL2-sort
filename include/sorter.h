@@ -24,4 +24,5 @@ class Sorter {
 
   void Init();
   void Sort();
+  void set_size(const Uint32 size);
 };

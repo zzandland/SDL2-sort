@@ -6,8 +6,10 @@
 
 class Screen {
  public:
-  Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height, const Uint32 size);
+  Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
+         const Uint32 size);
   ~Screen();
+  void set_size(const Uint32 size);
   void Init();
   void Update(size_t a, size_t b, bool isSwap = false);
 
