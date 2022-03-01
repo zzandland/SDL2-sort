@@ -42,6 +42,9 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_3:
           selected_ = 3;
           break;
+        case SDLK_4:
+          selected_ = 4;
+          break;
         case SDLK_z:
           set_size(128);
           break;
@@ -68,6 +71,8 @@ void Sorter::Sort() {
       break;
     case 3:
       SelectionSort();
+    case 4:
+      QuickSort();
     default:
       break;
   }
@@ -77,6 +82,36 @@ void Sorter::set_size(const Uint32 size) {
   size_ = size;
   Init();
   screen_->set_size(size);
+}
+
+void Sorter::QuickSortHelper(int l, int r) {
+  if (l < r) {
+    size_t m = QuickSortPartition(l, r);
+    if (!running_) return;
+
+    QuickSortHelper(l, m - 1);
+    QuickSortHelper(m + 1, r);
+  }
+}
+
+size_t Sorter::QuickSortPartition(int l, int r) {
+  Uint32 pivot = data_[r];
+  int i = l - 1;
+  for (size_t j = l; j < r; ++j) {
+    PollAndHandleSDLEvent();
+    if (!running_) return 0;
+    screen_->Update(j, j);
+    if (data_[j] < pivot) {
+      ++i;
+      screen_->Update(i, j, true);
+      std::swap(data_[i], data_[j]);
+    }
+  }
+  if (i + 1 != r) {
+    screen_->Update(i + 1, r, true);
+    std::swap(data_[i + 1], data_[r]);
+  }
+  return i + 1;
 }
 
 void Sorter::Randomize() {
@@ -147,5 +182,11 @@ void Sorter::SelectionSort() {
     std::swap(data_[i], data_[k]);
   }
 
+  running_ = false;
+}
+
+void Sorter::QuickSort() {
+  Randomize();
+  QuickSortHelper(0, size_ - 1);
   running_ = false;
 }

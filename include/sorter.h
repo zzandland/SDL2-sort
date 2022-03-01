@@ -14,9 +14,10 @@ class Sorter {
   void BubbleSort();
   void InsertionSort();
   void SelectionSort();
+  void QuickSort();
 
  private:
-  std::vector<unsigned int> data_;
+  std::vector<Uint32> data_;
   Screen *screen_;
   bool running_;
   size_t size_;
@@ -25,4 +26,6 @@ class Sorter {
   void Init();
   void Sort();
   void set_size(const Uint32 size);
+  void QuickSortHelper(int l, int r);
+  size_t QuickSortPartition(int l, int r);
 };
