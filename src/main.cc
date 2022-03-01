@@ -15,7 +15,6 @@ int main(int argc, char **argv) {
   Engine *engine = nullptr;
   try {
     engine = new Engine(winWidth, winHeight);
-
     engine->Run();
     delete engine;
     return EXIT_SUCCESS;

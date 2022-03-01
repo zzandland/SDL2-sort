@@ -112,15 +112,17 @@ void Sorter::BubbleSort() {
 void Sorter::InsertionSort() {
   Randomize();
 
-  for (size_t i = 1; i < size_; ++i) {
-    for (size_t j = i - 1; j >= 0 && data_[j] > data_[j + 1]; --j) {
+  for (size_t i = 0; i < size_ - 1; ++i) {
+    for (size_t j = i + 1; j > 0 && data_[j - 1] > data_[j]; --j) {
       PollAndHandleSDLEvent();
       if (!running_) return;
       // swap
-      screen_->Update(j, j + 1, true);
-      std::swap(data_[j], data_[j + 1]);
+      screen_->Update(j - 1, j, true);
+      std::swap(data_[j - 1], data_[j]);
     }
   }
+
+  running_ = false;
 }
 
 void Sorter::SelectionSort() {
