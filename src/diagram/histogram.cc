@@ -31,7 +31,6 @@ void Histogram::Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
 
 void Histogram::Update(SDL_Renderer* renderer, size_t a, size_t b,
                        bool isSwap) {
-  char buff[100];
   if (isSwap) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
     SDL_RenderDrawRect(renderer, &rects_[a]);

@@ -2,8 +2,6 @@
 
 #include <SDL.h>
 
-#include <vector>
-
 class Diagram {
  public:
   virtual void Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,

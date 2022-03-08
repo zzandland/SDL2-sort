@@ -45,15 +45,6 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_4:
           selected_ = 4;
           break;
-        case SDLK_z:
-          set_size(128);
-          break;
-        case SDLK_x:
-          set_size(256);
-          break;
-        case SDLK_c:
-          set_size(512);
-          break;
         default:
           break;
       }
@@ -119,6 +110,8 @@ void Sorter::Randomize() {
   size_t seed = (unsigned)time(NULL);
   srand(seed);
   for (size_t i = data_.size() - 1; i > 0; --i) {
+    PollAndHandleSDLEvent();
+    if (!running_) return;
     size_t j = rand() % (i + 1);
     screen_->Update(i, j, true);
     std::swap(data_[i], data_[j]);

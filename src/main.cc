@@ -8,8 +8,8 @@
 #include "engine.h"
 #include "helper.h"
 
-const Uint32 winWidth = 1536;
-const Uint32 winHeight = 1024;
+const Uint32 winWidth = 1024;
+const Uint32 winHeight = 768;
 
 int main(int argc, char **argv) {
   Engine *engine = nullptr;

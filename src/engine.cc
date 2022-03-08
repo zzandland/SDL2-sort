@@ -36,7 +36,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
 
   context_ = SDL_GL_CreateContext(window_);
 
-  const Uint32 size = 256;
+  const Uint32 size = width;
 
   Screen* screen = new Screen(renderer, width, height, size);
   sorter_ = new Sorter(screen, size);

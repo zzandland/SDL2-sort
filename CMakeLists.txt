@@ -14,6 +14,7 @@ set(TARGET_SRC "")
 list(APPEND TARGET_SRC
     include/helper.h
     src/diagram/histogram.cc
+    src/diagram/line.cc
     src/screen.cc
     src/engine.cc
     src/sorter.cc

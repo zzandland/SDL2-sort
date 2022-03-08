@@ -1,11 +1,11 @@
 #include "screen.h"
 
-#include "diagram/histogram.h"
+#include "diagram/line.h"
 
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
                const Uint32 size)
     : renderer_(renderer), width_(width), height_(height), size_(size) {
-  diagram_ = new Histogram(renderer, size, width, height);
+  diagram_ = new Line(renderer, size, width, height);
 }
 
 Screen::~Screen() {
