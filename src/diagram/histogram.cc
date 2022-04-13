@@ -1,6 +1,8 @@
 #include "diagram/histogram.h"
 
+#if defined(_WIN32)
 #include <windows.h>
+#endif
 
 #include <algorithm>
 #include <iostream>
