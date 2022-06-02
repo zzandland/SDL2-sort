@@ -9,11 +9,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/sdl2")
 include(CTest)
 enable_testing()
 
-include_directories(include)
+include_directories(src)
 
 set(TARGET_SRC "")
 list(APPEND TARGET_SRC
-    include/helper.h
+    src/helper.h
     src/diagram/histogram.cc
     src/diagram/line.cc
     src/screen.cc

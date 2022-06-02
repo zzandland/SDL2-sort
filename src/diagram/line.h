@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "diagram/diagram.h"
+#include "diagram.h"
 
 class Line : public Diagram {
  public:
