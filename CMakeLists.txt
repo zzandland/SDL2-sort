@@ -16,6 +16,10 @@ list(APPEND TARGET_SRC
     src/helper.h
     src/diagram/histogram.cc
     src/diagram/line.cc
+    src/algorithm/bubble_sort.cc
+    src/algorithm/insertion_sort.cc
+    src/algorithm/selection_sort.cc
+    src/algorithm/quick_sort.cc
     src/screen.cc
     src/engine.cc
     src/sorter.cc

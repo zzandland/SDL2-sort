@@ -1,5 +1,9 @@
 #include "sorter.h"
 
+#include "algorithm/bubble_sort.h"
+#include "algorithm/insertion_sort.h"
+#include "algorithm/quick_sort.h"
+#include "algorithm/selection_sort.h"
 #include "helper.h"
 
 Sorter::Sorter(Screen *screen, size_t size)
@@ -53,56 +57,28 @@ void Sorter::PollAndHandleSDLEvent() {
 }
 
 void Sorter::Sort() {
+  Randomize();
   switch (selected_) {
     case 1:
-      BubbleSort();
+      BubbleSort::Sort(*this);
       break;
     case 2:
-      InsertionSort();
+      InsertionSort::Sort(*this);
       break;
     case 3:
-      SelectionSort();
+      SelectionSort::Sort(*this);
     case 4:
-      QuickSort();
+      QuickSort::Sort(*this);
     default:
       break;
   }
+  running_ = false;
 }
 
 void Sorter::set_size(const Uint32 size) {
   size_ = size;
   Init();
   screen_->set_size(size);
-}
-
-void Sorter::QuickSortHelper(int l, int r) {
-  if (l < r) {
-    size_t m = QuickSortPartition(l, r);
-    if (!running_) return;
-
-    QuickSortHelper(l, m - 1);
-    QuickSortHelper(m + 1, r);
-  }
-}
-
-size_t Sorter::QuickSortPartition(int l, int r) {
-  Uint32 pivot = data_[r];
-  int i = l - 1;
-  for (size_t j = l; j < r; ++j) {
-    PollAndHandleSDLEvent();
-    if (!running_) return 0;
-    screen_->Update(j, j);
-    if (data_[j] < pivot) {
-      ++i;
-      screen_->Update(i, j, true);
-      std::swap(data_[i], data_[j]);
-    }
-  }
-  if (i + 1 != r) {
-    screen_->Update(i + 1, r, true);
-    std::swap(data_[i + 1], data_[r]);
-  }
-  return i + 1;
 }
 
 void Sorter::Randomize() {
@@ -116,70 +92,4 @@ void Sorter::Randomize() {
     screen_->Update(i, j, true);
     std::swap(data_[i], data_[j]);
   }
-}
-
-void Sorter::BubbleSort() {
-  Randomize();
-
-  for (size_t i = size_ - 1; i > 0; --i) {
-    for (size_t j = 0; j < i; ++j) {
-      PollAndHandleSDLEvent();
-      if (!running_) return;
-      screen_->Update(j, j + 1);
-      // swap if left element is greater than the right element
-      if (data_[j] > data_[j + 1]) {
-        screen_->Update(j, j + 1, true);
-        std::swap(data_[j], data_[j + 1]);
-      }
-    }
-  }
-
-  running_ = false;
-}
-
-void Sorter::InsertionSort() {
-  Randomize();
-
-  for (size_t i = 0; i < size_ - 1; ++i) {
-    for (size_t j = i + 1; j > 0 && data_[j - 1] > data_[j]; --j) {
-      PollAndHandleSDLEvent();
-      if (!running_) return;
-      // swap
-      screen_->Update(j - 1, j, true);
-      std::swap(data_[j - 1], data_[j]);
-    }
-  }
-
-  running_ = false;
-}
-
-void Sorter::SelectionSort() {
-  Randomize();
-
-  for (size_t i = 0; i < size_; ++i) {
-    // find the smallest
-    Uint32 min = data_[i];
-    Uint32 k = i;
-    for (size_t j = i + 1; j < size_; ++j) {
-      if (data_[j] < min) {
-        min = data_[j];
-        k = j;
-      }
-      PollAndHandleSDLEvent();
-      if (!running_) return;
-      screen_->Update(i, j);
-    }
-    PollAndHandleSDLEvent();
-    if (!running_) return;
-    screen_->Update(i, k, true);
-    std::swap(data_[i], data_[k]);
-  }
-
-  running_ = false;
-}
-
-void Sorter::QuickSort() {
-  Randomize();
-  QuickSortHelper(0, size_ - 1);
-  running_ = false;
 }

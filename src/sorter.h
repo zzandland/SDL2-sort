@@ -7,6 +7,10 @@
 
 class Sorter {
  public:
+  bool running_;
+  size_t size_;
+  std::vector<Uint32> data_;
+  Screen *screen_;
   Sorter(Screen *screen, size_t size);
   ~Sorter();
   void PollAndHandleSDLEvent();
@@ -17,10 +21,6 @@ class Sorter {
   void QuickSort();
 
  private:
-  std::vector<Uint32> data_;
-  Screen *screen_;
-  bool running_;
-  size_t size_;
   Uint8 selected_;
 
   void Init();

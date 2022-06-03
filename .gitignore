@@ -12,3 +12,4 @@ _deps
 DartConfiguration.tcl
 .vscode
 build
+.DS_Store
