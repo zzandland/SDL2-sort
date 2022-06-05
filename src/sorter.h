@@ -17,6 +17,7 @@ class Sorter {
   void Randomize();
   void Color(std::vector<size_t> &indexes);
   void Swap(size_t a, size_t b);
+  void Delete(std::vector<size_t> &indexes);
 
  private:
   Uint8 selected_;

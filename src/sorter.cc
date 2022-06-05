@@ -2,6 +2,7 @@
 
 #include "algorithm/bubble_sort.h"
 #include "algorithm/insertion_sort.h"
+#include "algorithm/merge_sort.h"
 #include "algorithm/quick_sort.h"
 #include "algorithm/selection_sort.h"
 #include "helper.h"
@@ -49,6 +50,9 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_4:
           selected_ = 4;
           break;
+        case SDLK_5:
+          selected_ = 5;
+          break;
         default:
           break;
       }
@@ -67,8 +71,13 @@ void Sorter::Sort() {
       break;
     case 3:
       SelectionSort::Sort(*this);
+      break;
     case 4:
       QuickSort::Sort(*this);
+      break;
+    case 5:
+      MergeSort::Sort(*this);
+      break;
     default:
       break;
   }
@@ -105,7 +114,7 @@ void Sorter::Color(std::vector<size_t> &indexes) {
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
   // first clear the original elements
-  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+  Delete(indexes);
 
   std::swap(data_[a], data_[b]);
 
@@ -116,4 +125,8 @@ void Sorter::Swap(size_t a, size_t b) {
 
   // change the colors to be regular
   screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
+}
+
+void Sorter::Delete(std::vector<size_t> &indexes) {
+  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
 }
