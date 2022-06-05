@@ -25,6 +25,9 @@ void Screen::Init() {
   diagram_->Init(renderer_, size_, width_, height_);
 }
 
-void Screen::Update(size_t a, size_t b, bool isSwap) {
-  diagram_->Update(renderer_, a, b, isSwap);
+void Screen::Render() { diagram_->Render(renderer_); }
+
+void Screen::Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
+                    SDL_Color color) {
+  diagram_->Update(renderer_, data, indexes, color);
 }

@@ -12,11 +12,11 @@ void SelectionSort::Sort(Sorter &sorter) {
       }
       sorter.PollAndHandleSDLEvent();
       if (!sorter.running_) return;
-      sorter.screen_->Update(i, j);
+      std::vector<size_t> tmp{i, j};
+      sorter.Color(tmp);
     }
     sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return;
-    sorter.screen_->Update(i, k, true);
-    std::swap(sorter.data_[i], sorter.data_[k]);
+    sorter.Swap(i, k);
   }
 }

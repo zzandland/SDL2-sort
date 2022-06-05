@@ -98,7 +98,31 @@ void Sorter::Randomize() {
     PollAndHandleSDLEvent();
     if (!running_) return;
     size_t j = rand() % (i + 1);
-    screen_->Update(i, j, true);
-    std::swap(data_[i], data_[j]);
+    Swap(i, j);
   }
+}
+
+void Sorter::Color(std::vector<size_t> &indexes) {
+  screen_->Update(data_, indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
+
+  screen_->Render();
+
+  // change the colors to be regular
+  screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
+}
+
+void Sorter::Swap(size_t a, size_t b) {
+  std::vector<size_t> indexes{a, b};
+  // first clear the original elements
+  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+
+  std::swap(data_[a], data_[b]);
+
+  // color the two elements being swapped
+  screen_->Update(data_, indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
+
+  screen_->Render();
+
+  // change the colors to be regular
+  screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }

@@ -15,47 +15,27 @@ Line::Line(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
 
 void Line::Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
                 Uint32 screen_height) {
-  lines_.resize(size);
   Sint32 height;
   SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
 
   for (size_t i = 0; i < size; ++i) {
     height = ((double)screen_height / size) * (i + 1);
-    lines_[i] = height;
-    SDL_RenderDrawLine(renderer, i, screen_height_, i,
-                       screen_height_ - lines_[i]);
+    SDL_RenderDrawLine(renderer, i, screen_height_, i, screen_height_ - height);
   }
 
   SDL_RenderPresent(renderer);
 }
 
-void Line::Update(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap) {
-  if (isSwap) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderDrawLine(renderer, a, screen_height_, a,
-                       screen_height_ - lines_[a]);
-    SDL_RenderDrawLine(renderer, b, screen_height_, b,
-                       screen_height_ - lines_[b]);
-    Swap(a, b);
+void Line::Render(SDL_Renderer* renderer) { SDL_RenderPresent(renderer); }
+
+void Line::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
+                  std::vector<size_t>& indexes, SDL_Color color) {
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  size_t size = data.size();
+  Sint32 height;
+  for (size_t index : indexes) {
+    height = ((double)screen_height_ / size) * data[index];
+    SDL_RenderDrawLine(renderer, index, screen_height_, index,
+                       screen_height_ - height);
   }
-
-  if (isSwap) {
-    SDL_SetRenderDrawColor(renderer, 165, 105, 189, SDL_ALPHA_OPAQUE);
-  } else {
-    SDL_SetRenderDrawColor(renderer, 100, 180, 100, SDL_ALPHA_OPAQUE);
-  }
-  SDL_RenderDrawLine(renderer, a, screen_height_, a,
-                     screen_height_ - lines_[a]);
-  SDL_RenderDrawLine(renderer, b, screen_height_, b,
-                     screen_height_ - lines_[b]);
-
-  SDL_RenderPresent(renderer);
-
-  SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
-  SDL_RenderDrawLine(renderer, a, screen_height_, a,
-                     screen_height_ - lines_[a]);
-  SDL_RenderDrawLine(renderer, b, screen_height_, b,
-                     screen_height_ - lines_[b]);
 }
-
-void Line::Swap(size_t a, size_t b) { std::swap(lines_[a], lines_[b]); }

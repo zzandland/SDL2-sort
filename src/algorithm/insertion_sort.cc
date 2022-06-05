@@ -7,8 +7,7 @@ void InsertionSort::Sort(Sorter &sorter) {
       sorter.PollAndHandleSDLEvent();
       if (!sorter.running_) return;
       // swap
-      sorter.screen_->Update(j - 1, j, true);
-      std::swap(sorter.data_[j - 1], sorter.data_[j]);
+      sorter.Swap(j - 1, j);
     }
   }
 }
