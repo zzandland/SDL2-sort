@@ -39,3 +39,11 @@ void Line::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
                        screen_height_ - height);
   }
 }
+
+void Line::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
+                  size_t index, SDL_Color color) {
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  const Sint32 height = ((double)screen_height_ / data.size()) * data[index];
+  SDL_RenderDrawLine(renderer, index, screen_height_, index,
+                     screen_height_ - height);
+}

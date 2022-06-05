@@ -14,6 +14,7 @@ class Screen {
   void Render();
   void Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
               SDL_Color color);
+  void Update(std::vector<Uint32>& data, size_t index, SDL_Color color);
 
  private:
   Uint32 width_;

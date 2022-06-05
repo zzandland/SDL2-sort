@@ -13,6 +13,8 @@ class Line : public Diagram {
   void Render(SDL_Renderer* renderer);
   void Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
               std::vector<size_t>& indexes, SDL_Color color);
+  void Update(SDL_Renderer* renderer, std::vector<Uint32>& data, size_t index,
+              SDL_Color color);
 
  private:
   Uint32 screen_height_;

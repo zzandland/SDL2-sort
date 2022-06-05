@@ -111,6 +111,15 @@ void Sorter::Color(std::vector<size_t> &indexes) {
   screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }
 
+void Sorter::Color(size_t index) {
+  screen_->Update(data_, index, {100, 180, 100, SDL_ALPHA_OPAQUE});
+
+  screen_->Render();
+
+  // change the colors to be regular
+  screen_->Update(data_, index, {170, 183, 184, SDL_ALPHA_OPAQUE});
+}
+
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
   // first clear the original elements
@@ -129,4 +138,8 @@ void Sorter::Swap(size_t a, size_t b) {
 
 void Sorter::Delete(std::vector<size_t> &indexes) {
   screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+}
+
+void Sorter::Delete(size_t index) {
+  screen_->Update(data_, index, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
 }

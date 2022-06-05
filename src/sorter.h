@@ -16,8 +16,10 @@ class Sorter {
   void PollAndHandleSDLEvent();
   void Randomize();
   void Color(std::vector<size_t> &indexes);
+  void Color(size_t index);
   void Swap(size_t a, size_t b);
   void Delete(std::vector<size_t> &indexes);
+  void Delete(size_t index);
 
  private:
   Uint8 selected_;

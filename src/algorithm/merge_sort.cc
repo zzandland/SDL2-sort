@@ -31,18 +31,13 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
       ++j;
     }
   }
-  for (int h = 0; h < (r - l + 1); ++h) {
-    std::cout << tmp[h] << " ";
-  }
-  std::cout << std::endl;
   k = 0;  // reuse the variable for updating the actual data
   while (l + k <= r) {
     sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return;
-    std::vector<size_t> indexes{l + k};
-    sorter.Delete(indexes);
+    sorter.Delete(l + k);
     sorter.data_[l + k] = tmp[k];
-    sorter.Color(indexes);
+    sorter.Color(l + k);
     k++;
   }
 }

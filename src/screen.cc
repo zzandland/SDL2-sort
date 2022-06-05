@@ -31,3 +31,7 @@ void Screen::Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
                     SDL_Color color) {
   diagram_->Update(renderer_, data, indexes, color);
 }
+
+void Screen::Update(std::vector<Uint32>& data, size_t index, SDL_Color color) {
+  diagram_->Update(renderer_, data, index, color);
+}
