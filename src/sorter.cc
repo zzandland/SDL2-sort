@@ -19,6 +19,7 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
+  screen_->Init();
 }
 
 void Sorter::PollAndHandleSDLEvent() {
@@ -34,7 +35,6 @@ void Sorter::PollAndHandleSDLEvent() {
           if (running_) {
             Sort();
           } else {
-            screen_->Init();
             Init();
           }
           break;
@@ -82,6 +82,7 @@ void Sorter::Sort() {
       break;
   }
   running_ = false;
+  // Init();
 }
 
 void Sorter::set_size(const Uint32 size) {
@@ -111,10 +112,15 @@ void Sorter::Color(std::vector<size_t> &indexes) {
   screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }
 
+void Sorter::Delete(std::vector<size_t> &indexes) {
+  // clear elements
+  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+}
+
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
   // first clear the original elements
-  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+  Delete(indexes);
 
   std::swap(data_[a], data_[b]);
 

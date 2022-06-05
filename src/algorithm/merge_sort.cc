@@ -4,7 +4,7 @@
 
 void MergeSort::Sort(Sorter &sorter) { Recurse(0, sorter.size_ - 1, sorter); }
 
-void MergeSort::Recurse(int l, int r, Sorter &sorter) {
+void MergeSort::Recurse(size_t l, size_t r, Sorter &sorter) {
   sorter.PollAndHandleSDLEvent();
   if (!sorter.running_) return;
   if (l < r) {
@@ -15,25 +15,21 @@ void MergeSort::Recurse(int l, int r, Sorter &sorter) {
   }
 }
 
-void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
-  int i = l;      // start of first array
-  int j = m + 1;  // start of second array
-  int tmp[r - l + 1];
-  int k = 0;  // running index within the tmp array
+void MergeSort::InPlaceSort(size_t l, size_t r, size_t m, Sorter &sorter) {
+  size_t i = l;      // start of first array
+  size_t j = m + 1;  // start of second array
+  int k = 0;         // running index within the tmp array
+  Uint32 tmp[r - l + 1];
   while (i <= m || j <= r) {
-    int lVal = (i <= m) ? sorter.data_[i] : INT_MAX;
-    int rVal = (j <= r) ? sorter.data_[j] : INT_MAX;
+    Uint32 lVal = (i <= m) ? sorter.data_[i] : INT_MAX;
+    Uint32 rVal = (j <= r) ? sorter.data_[j] : INT_MAX;
     if (lVal < rVal) {
-      tmp[k++] = i;
+      tmp[k++] = sorter.data_[i];
       ++i;
     } else {
-      tmp[k++] = j;
+      tmp[k++] = sorter.data_[j];
       ++j;
     }
-  }
-  std::cout << "*****" << l << ':' << r << ":" << m << std::endl;
-  for (int h = 0; h < (r - l + 1); ++h) {
-    std::cout << h << ':' << tmp[h] << std::endl;
   }
   k = 0;
   while (l + k <= r) {
@@ -43,11 +39,10 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
       ++k;
       continue;
     }
-    sorter.screen_->Update(tmp[k], l + k, true);
-    std::swap(sorter.data_[tmp[k]], sorter.data_[l + k]);
+    std::vector<size_t> indexes{l + k};
+    sorter.Delete(indexes);
+    sorter.data_[l + k] = tmp[k];
+    sorter.Color(indexes);
     ++k;
-  }
-  for (int h = l; h <= r; ++h) {
-    std::cout << h << ':' << sorter.data_[h] << std::endl;
   }
 }
