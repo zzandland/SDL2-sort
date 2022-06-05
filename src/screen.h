@@ -11,7 +11,9 @@ class Screen {
   ~Screen();
   void set_size(const Uint32 size);
   void Init();
-  void Update(size_t a, size_t b, bool isSwap = false);
+  void Render();
+  void Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
+              SDL_Color color);
 
  private:
   Uint32 width_;

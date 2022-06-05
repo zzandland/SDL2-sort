@@ -15,10 +15,8 @@ class Sorter {
   ~Sorter();
   void PollAndHandleSDLEvent();
   void Randomize();
-  void BubbleSort();
-  void InsertionSort();
-  void SelectionSort();
-  void QuickSort();
+  void Color(std::vector<size_t> &indexes);
+  void Swap(size_t a, size_t b);
 
  private:
   Uint8 selected_;
@@ -26,6 +24,4 @@ class Sorter {
   void Init();
   void Sort();
   void set_size(const Uint32 size);
-  void QuickSortHelper(int l, int r);
-  size_t QuickSortPartition(int l, int r);
 };
