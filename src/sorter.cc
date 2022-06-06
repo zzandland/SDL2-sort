@@ -102,7 +102,7 @@ void Sorter::Randomize() {
   }
 }
 
-void Sorter::Color(std::vector<size_t> &indexes) {
+void Sorter::Highlight(std::vector<size_t> &indexes) {
   screen_->Update(data_, indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
 
   screen_->Render();
@@ -111,13 +111,25 @@ void Sorter::Color(std::vector<size_t> &indexes) {
   screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }
 
-void Sorter::Color(size_t index) {
+void Sorter::Highlight(size_t index) {
   screen_->Update(data_, index, {100, 180, 100, SDL_ALPHA_OPAQUE});
 
   screen_->Render();
 
   // change the colors to be regular
   screen_->Update(data_, index, {170, 183, 184, SDL_ALPHA_OPAQUE});
+}
+
+void Sorter::Color(std::vector<size_t> &indexes, SDL_Color color) {
+  screen_->Update(data_, indexes, color);
+
+  screen_->Render();
+}
+
+void Sorter::Color(size_t index, SDL_Color color) {
+  screen_->Update(data_, index, color);
+
+  screen_->Render();
 }
 
 void Sorter::Swap(size_t a, size_t b) {
@@ -134,6 +146,22 @@ void Sorter::Swap(size_t a, size_t b) {
 
   // change the colors to be regular
   screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
+}
+
+void Sorter::Swap(size_t a, size_t b, SDL_Color color) {
+  std::vector<size_t> indexes{a, b};
+  // first clear the original elements
+  Delete(indexes);
+
+  std::swap(data_[a], data_[b]);
+
+  // color the two elements being swapped
+  screen_->Update(data_, indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
+
+  screen_->Render();
+
+  // change the colors to be what's provided in the input param
+  screen_->Update(data_, indexes, color);
 }
 
 void Sorter::Delete(std::vector<size_t> &indexes) {

@@ -19,6 +19,11 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
   size_t i = l;      // start of first array
   size_t j = m + 1;  // start of second array
   size_t k = 0;      // running index within the tmp array
+  std::vector<size_t> indexes;
+  for (int h = l; h <= r; ++h) {
+    indexes.push_back(h);
+  }
+  sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   int tmp[r - l + 1];
   while (i <= m || j <= r) {
     Uint32 lVal = (i <= m) ? sorter.data_[i] : UINT_MAX;
@@ -37,7 +42,8 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
     if (!sorter.running_) return;
     sorter.Delete(l + k);
     sorter.data_[l + k] = tmp[k];
-    sorter.Color(l + k);
+    sorter.Color(l + k, {165, 105, 189, SDL_ALPHA_OPAQUE});
     k++;
   }
+  sorter.Color(indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }

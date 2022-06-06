@@ -15,16 +15,22 @@ void QuickSort::Recurse(int l, int r, Sorter &sorter) {
 size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
   Uint32 pivot = sorter.data_[r];
   int i = l - 1;
+  std::vector<size_t> indexes;
+  for (size_t j = l; j <= r; ++j) {
+    indexes.push_back(j);
+  }
+  sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   for (size_t j = l; j < r; ++j) {
     sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return 0;
     if (sorter.data_[j] < pivot) {
       ++i;
-      sorter.Swap(i, j);
+      sorter.Swap(i, j, {100, 180, 100, SDL_ALPHA_OPAQUE});
     }
   }
   if (i + 1 != r) {
-    sorter.Swap(i + 1, r);
+    sorter.Swap(i + 1, r, {100, 180, 100, SDL_ALPHA_OPAQUE});
   }
+  sorter.Color(indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
   return i + 1;
 }
