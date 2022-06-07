@@ -7,7 +7,7 @@
 #include "algorithm/selection_sort.h"
 #include "helper.h"
 
-Sorter::Sorter(std::unique_ptr<Screen> screen, size_t size)
+Sorter::Sorter(std::unique_ptr<Screen> &&screen, size_t size)
     : screen_(std::move(screen)), running_(false), size_(size), selected_(1) {
   Init();
 }

@@ -12,7 +12,7 @@ class Sorter {
   size_t size_;
   std::vector<Uint32> data_;
   std::unique_ptr<Screen> screen_;
-  Sorter(std::unique_ptr<Screen> screen, size_t size);
+  Sorter(std::unique_ptr<Screen> &&screen, size_t size);
   void PollAndHandleSDLEvent();
   void Randomize();
   void Highlight(std::vector<size_t> &indexes);
