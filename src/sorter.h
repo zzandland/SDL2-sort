@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "screen.h"
@@ -10,9 +11,8 @@ class Sorter {
   bool running_;
   size_t size_;
   std::vector<Uint32> data_;
-  Screen *screen_;
-  Sorter(Screen *screen, size_t size);
-  ~Sorter();
+  std::unique_ptr<Screen> screen_;
+  Sorter(std::unique_ptr<Screen> screen, size_t size);
   void PollAndHandleSDLEvent();
   void Randomize();
   void Highlight(std::vector<size_t> &indexes);

@@ -7,12 +7,10 @@
 #include "algorithm/selection_sort.h"
 #include "helper.h"
 
-Sorter::Sorter(Screen *screen, size_t size)
-    : screen_(screen), running_(false), size_(size), selected_(1) {
+Sorter::Sorter(std::unique_ptr<Screen> screen, size_t size)
+    : screen_(std::move(screen)), running_(false), size_(size), selected_(1) {
   Init();
 }
-
-Sorter::~Sorter() { delete screen_; }
 
 void Sorter::Init() {
   data_.resize(size_);

@@ -4,6 +4,7 @@
 #include <windows.h>
 #endif
 #include <iostream>
+#include <memory>
 
 #include "engine.h"
 #include "helper.h"
@@ -12,14 +13,12 @@ const Uint32 winWidth = 1024;
 const Uint32 winHeight = 768;
 
 int main(int argc, char **argv) {
-  Engine *engine = nullptr;
+  std::unique_ptr<Engine> engine;
   try {
-    engine = new Engine(winWidth, winHeight);
+    engine = std::make_unique<Engine>(winWidth, winHeight);
     engine->Run();
-    delete engine;
     return EXIT_SUCCESS;
   } catch (const sdl_exception::EarlyQuit &) {
-    delete engine;
     return EXIT_SUCCESS;
   } catch (const std::runtime_error &error) {
     std::string error_msg =
@@ -29,7 +28,6 @@ int main(int argc, char **argv) {
 #else
     std::cerr << error_msg << std::endl;
 #endif
-    delete engine;
     return EXIT_FAILURE;
   }
 }

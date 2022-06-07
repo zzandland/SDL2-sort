@@ -2,6 +2,8 @@
 
 #include <SDL.h>
 
+#include <memory>
+
 #include "screen.h"
 #include "sorter.h"
 
@@ -18,5 +20,5 @@ class Engine {
  private:
   SDL_Window* window_;
   SDL_GLContext context_;
-  Sorter* sorter_;
+  std::unique_ptr<Sorter> sorter_;
 };

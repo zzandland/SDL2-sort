@@ -2,6 +2,8 @@
 
 #include <SDL.h>
 
+#include <memory>
+
 #include "diagram/diagram.h"
 
 class Screen {
@@ -21,5 +23,5 @@ class Screen {
   Uint32 height_;
   Uint32 size_;
   SDL_Renderer* renderer_;
-  Diagram* diagram_;
+  std::unique_ptr<Diagram> diagram_;
 };

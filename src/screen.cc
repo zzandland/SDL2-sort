@@ -5,11 +5,10 @@
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
                const Uint32 size)
     : renderer_(renderer), width_(width), height_(height), size_(size) {
-  diagram_ = new Line(renderer, size, width, height);
+  diagram_ = std::make_unique<Line>(renderer, size, width, height);
 }
 
 Screen::~Screen() {
-  delete diagram_;
   SDL_DestroyRenderer(renderer_);
   renderer_ = nullptr;
 }

@@ -2,6 +2,7 @@
 #include <windows.h>
 #endif
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 #include "engine.h"
@@ -38,13 +39,11 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
 
   const Uint32 size = width;
 
-  Screen* screen = new Screen(renderer, width, height, size);
-  sorter_ = new Sorter(screen, size);
+  sorter_ = std::make_unique<Sorter>(
+      std::make_unique<Screen>(renderer, width, height, size), size);
 }
 
 Engine::~Engine() {
-  delete sorter_;
-
   SDL_DestroyWindow(window_);
   window_ = nullptr;
 
