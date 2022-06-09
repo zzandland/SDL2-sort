@@ -1,6 +1,7 @@
 #include "sorter.h"
 
 #include "algorithm/bubble_sort.h"
+#include "algorithm/heap_sort.h"
 #include "algorithm/insertion_sort.h"
 #include "algorithm/merge_sort.h"
 #include "algorithm/quick_sort.h"
@@ -51,6 +52,9 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_5:
           selected_ = 5;
           break;
+        case SDLK_6:
+          selected_ = 6;
+          break;
         default:
           break;
       }
@@ -75,6 +79,9 @@ void Sorter::Sort() {
       break;
     case 5:
       MergeSort::Sort(*this);
+      break;
+    case 6:
+      HeapSort::Sort(*this);
       break;
     default:
       break;

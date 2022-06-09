@@ -21,6 +21,7 @@ list(APPEND TARGET_SRC
     src/algorithm/selection_sort.cc
     src/algorithm/quick_sort.cc
     src/algorithm/merge_sort.cc
+    src/algorithm/heap_sort.cc
     src/screen.cc
     src/engine.cc
     src/sorter.cc
