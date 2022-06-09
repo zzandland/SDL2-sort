@@ -5,7 +5,6 @@
 void MergeSort::Sort(Sorter &sorter) { Recurse(0, sorter.size_ - 1, sorter); }
 
 void MergeSort::Recurse(int l, int r, Sorter &sorter) {
-  sorter.PollAndHandleSDLEvent();
   if (!sorter.running_) return;
   if (l < r) {
     size_t m = l + (r - l) / 2;
@@ -38,7 +37,6 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
   }
   k = 0;  // reuse the variable for updating the actual data
   while (l + k <= r) {
-    sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return;
     sorter.Delete(l + k);
     sorter.data_[l + k] = tmp[k];

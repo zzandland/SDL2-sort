@@ -18,6 +18,7 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
+  screen_->Init();
 }
 
 void Sorter::PollAndHandleSDLEvent() {
@@ -31,9 +32,10 @@ void Sorter::PollAndHandleSDLEvent() {
         case SDLK_SPACE:
           running_ = !running_;
           if (running_) {
-            Sort();
+            t = std::thread(&Sorter::Sort, this);
+            t.detach();
           } else {
-            screen_->Init();
+            running_ = false;
             Init();
           }
           break;

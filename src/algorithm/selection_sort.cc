@@ -11,12 +11,10 @@ void SelectionSort::Sort(Sorter &sorter) {
         min = sorter.data_[j];
         k = j;
       }
-      sorter.PollAndHandleSDLEvent();
       if (!sorter.running_) return;
       sorter.Highlight(j);
     }
     sorter.Color(i, {170, 183, 184, SDL_ALPHA_OPAQUE});
-    sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return;
     sorter.Swap(i, k);
   }

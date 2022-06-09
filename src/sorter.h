@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include "screen.h"
@@ -26,6 +27,7 @@ class Sorter {
 
  private:
   Uint8 selected_;
+  std::thread t;
 
   void Init();
   void Sort();

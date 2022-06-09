@@ -21,7 +21,6 @@ size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
   }
   sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   for (size_t j = l; j < r; ++j) {
-    sorter.PollAndHandleSDLEvent();
     if (!sorter.running_) return 0;
     if (sorter.data_[j] < pivot) {
       ++i;

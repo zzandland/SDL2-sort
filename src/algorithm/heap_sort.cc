@@ -21,7 +21,6 @@ void HeapSort::Heapify(Sorter &sorter, size_t i, size_t len) {
   size_t l = 2 * i + 1;
   size_t r = 2 * i + 2;
 
-  sorter.PollAndHandleSDLEvent();
   if (!sorter.running_) return;
 
   // determine if the left child is the largest
