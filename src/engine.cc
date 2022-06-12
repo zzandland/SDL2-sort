@@ -39,7 +39,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
 
   const Uint32 size = width;
 
-  sorter_ = std::make_shared<Sorter>(
+  sorter_ = std::make_unique<Sorter>(
       std::make_unique<Screen>(renderer, width, height, size), size);
 }
 
@@ -65,8 +65,7 @@ void Engine::PollAndHandleSDLEvent() {
     if (SDL_KEYDOWN == event.type) {
       switch (event.key.keysym.sym) {
         case SDLK_SPACE:
-          t = std::thread(&Sorter::StartAndStop, sorter_);
-          t.detach();
+          sorter_->StartAndStop();
           break;
         case SDLK_1:
           sorter_->set_selected(Algorithm::kBubbleSort);

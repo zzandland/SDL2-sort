@@ -26,7 +26,8 @@ void Sorter::Init() {
 void Sorter::StartAndStop() {
   running_ = !running_;
   if (running_) {
-    Sort();
+    t_ = std::thread(&Sorter::Sort, this);
+    t_.detach();
   } else {
     running_ = false;
     Init();

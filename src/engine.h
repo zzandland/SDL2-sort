@@ -20,10 +20,9 @@ class Engine {
   void Run();
 
  private:
-  std::thread t;
   SDL_Window* window_;
   SDL_GLContext context_;
-  std::shared_ptr<Sorter> sorter_;
+  std::unique_ptr<Sorter> sorter_;
 
   void PollAndHandleSDLEvent();
 };
