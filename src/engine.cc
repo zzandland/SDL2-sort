@@ -39,7 +39,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
 
   const Uint32 size = width;
 
-  sorter_ = std::make_unique<Sorter>(
+  sorter_ = std::make_shared<Sorter>(
       std::make_unique<Screen>(renderer, width, height, size), size);
 }
 
@@ -52,6 +52,43 @@ Engine::~Engine() {
 
 void Engine::Run() {
   while (true) {
-    sorter_->PollAndHandleSDLEvent();
+    PollAndHandleSDLEvent();
+  }
+}
+
+void Engine::PollAndHandleSDLEvent() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    if (SDL_QUIT == event.type) {
+      throw sdl_exception::EarlyQuit();
+    }
+    if (SDL_KEYDOWN == event.type) {
+      switch (event.key.keysym.sym) {
+        case SDLK_SPACE:
+          t = std::thread(&Sorter::StartAndStop, sorter_);
+          t.detach();
+          break;
+        case SDLK_1:
+          sorter_->set_selected(Algorithm::kBubbleSort);
+          break;
+        case SDLK_2:
+          sorter_->set_selected(Algorithm::kInsertionSort);
+          break;
+        case SDLK_3:
+          sorter_->set_selected(Algorithm::kSelectionSort);
+          break;
+        case SDLK_4:
+          sorter_->set_selected(Algorithm::kQuickSort);
+          break;
+        case SDLK_5:
+          sorter_->set_selected(Algorithm::kMergeSort);
+          break;
+        case SDLK_6:
+          sorter_->set_selected(Algorithm::kHeapSort);
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

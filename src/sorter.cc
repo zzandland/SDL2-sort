@@ -6,10 +6,12 @@
 #include "algorithm/merge_sort.h"
 #include "algorithm/quick_sort.h"
 #include "algorithm/selection_sort.h"
-#include "helper.h"
 
 Sorter::Sorter(std::unique_ptr<Screen> &&screen, size_t size)
-    : screen_(std::move(screen)), running_(false), size_(size), selected_(1) {
+    : screen_(std::move(screen)),
+      running_(false),
+      size_(size),
+      selected_(Algorithm::kBubbleSort) {
   Init();
 }
 
@@ -21,68 +23,35 @@ void Sorter::Init() {
   screen_->Init();
 }
 
-void Sorter::PollAndHandleSDLEvent() {
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    if (SDL_QUIT == event.type) {
-      throw sdl_exception::EarlyQuit();
-    }
-    if (SDL_KEYDOWN == event.type) {
-      switch (event.key.keysym.sym) {
-        case SDLK_SPACE:
-          running_ = !running_;
-          if (running_) {
-            t = std::thread(&Sorter::Sort, this);
-            t.detach();
-          } else {
-            running_ = false;
-            Init();
-          }
-          break;
-        case SDLK_1:
-          selected_ = 1;
-          break;
-        case SDLK_2:
-          selected_ = 2;
-          break;
-        case SDLK_3:
-          selected_ = 3;
-          break;
-        case SDLK_4:
-          selected_ = 4;
-          break;
-        case SDLK_5:
-          selected_ = 5;
-          break;
-        case SDLK_6:
-          selected_ = 6;
-          break;
-        default:
-          break;
-      }
-    }
+void Sorter::StartAndStop() {
+  running_ = !running_;
+  if (running_) {
+    Sort();
+  } else {
+    running_ = false;
+    Init();
   }
 }
 
 void Sorter::Sort() {
   Randomize();
   switch (selected_) {
-    case 1:
+    case Algorithm::kBubbleSort:
       BubbleSort::Sort(*this);
       break;
-    case 2:
+    case Algorithm::kInsertionSort:
       InsertionSort::Sort(*this);
       break;
-    case 3:
+    case Algorithm::kSelectionSort:
       SelectionSort::Sort(*this);
       break;
-    case 4:
+    case Algorithm::kQuickSort:
       QuickSort::Sort(*this);
       break;
-    case 5:
+    case Algorithm::kMergeSort:
       MergeSort::Sort(*this);
       break;
-    case 6:
+    case Algorithm::kHeapSort:
       HeapSort::Sort(*this);
       break;
     default:
@@ -93,16 +62,17 @@ void Sorter::Sort() {
 
 void Sorter::set_size(const Uint32 size) {
   size_ = size;
-  Init();
   screen_->set_size(size);
+  Init();
 }
+
+void Sorter::set_selected(Algorithm algorithm) { selected_ = algorithm; }
 
 void Sorter::Randomize() {
   size_t len = data_.size();
   size_t seed = (unsigned)time(NULL);
   srand(seed);
   for (size_t i = data_.size() - 1; i > 0; --i) {
-    PollAndHandleSDLEvent();
     if (!running_) return;
     size_t j = rand() % (i + 1);
     Swap(i, j);

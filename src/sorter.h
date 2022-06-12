@@ -2,10 +2,18 @@
 
 #include <iostream>
 #include <memory>
-#include <thread>
 #include <vector>
 
 #include "screen.h"
+
+enum class Algorithm {
+  kBubbleSort,
+  kInsertionSort,
+  kSelectionSort,
+  kQuickSort,
+  kMergeSort,
+  kHeapSort
+};
 
 class Sorter {
  public:
@@ -15,7 +23,7 @@ class Sorter {
   std::unique_ptr<Screen> screen_;
   Sorter(std::unique_ptr<Screen> &&screen, size_t size);
   void PollAndHandleSDLEvent();
-  void Randomize();
+  void StartAndStop();
   void Highlight(std::vector<size_t> &indexes);
   void Highlight(size_t index);
   void Color(std::vector<size_t> &indexes, SDL_Color color);
@@ -24,12 +32,13 @@ class Sorter {
   void Swap(size_t a, size_t b, SDL_Color color);
   void Delete(std::vector<size_t> &indexes);
   void Delete(size_t index);
+  void set_selected(Algorithm algorithm);
 
  private:
-  Uint8 selected_;
-  std::thread t;
+  Algorithm selected_;
 
   void Init();
   void Sort();
+  void Randomize();
   void set_size(const Uint32 size);
 };

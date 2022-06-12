@@ -3,7 +3,9 @@
 #include <SDL.h>
 
 #include <memory>
+#include <thread>
 
+#include "helper.h"
 #include "screen.h"
 #include "sorter.h"
 
@@ -18,7 +20,10 @@ class Engine {
   void Run();
 
  private:
+  std::thread t;
   SDL_Window* window_;
   SDL_GLContext context_;
-  std::unique_ptr<Sorter> sorter_;
+  std::shared_ptr<Sorter> sorter_;
+
+  void PollAndHandleSDLEvent();
 };
