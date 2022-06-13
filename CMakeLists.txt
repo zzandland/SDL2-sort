@@ -16,6 +16,7 @@ list(APPEND TARGET_SRC
     src/helper.h
     src/diagram/histogram.cc
     src/diagram/line.cc
+    src/diagram/scatter_plot.cc
     src/algorithm/bubble_sort.cc
     src/algorithm/insertion_sort.cc
     src/algorithm/selection_sort.cc

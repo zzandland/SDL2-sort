@@ -36,6 +36,7 @@ class Sorter {
   void set_size(const Uint32 size);
   bool running();
   void toggle_running();
+  void set_diagram(DiagramType diagram);
 
  private:
   std::vector<Uint32> data_;

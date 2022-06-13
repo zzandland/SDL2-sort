@@ -85,6 +85,12 @@ void Engine::PollAndHandleSDLEvent() {
         case SDLK_6:
           sorter_->set_selected(Algorithm::kHeapSort);
           break;
+        case SDLK_z:
+          sorter_->set_diagram(DiagramType::kLine);
+          break;
+        case SDLK_x:
+          sorter_->set_diagram(DiagramType::kScatterPlot);
+          break;
         default:
           break;
       }
