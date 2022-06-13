@@ -1,11 +1,11 @@
 #include "quick_sort.h"
 
-void QuickSort::Sort(Sorter &sorter) { Recurse(0, sorter.size_ - 1, sorter); }
+void QuickSort::Sort(Sorter &sorter) { Recurse(0, sorter.size() - 1, sorter); }
 
 void QuickSort::Recurse(int l, int r, Sorter &sorter) {
   if (l < r) {
     size_t m = Partition(l, r, sorter);
-    if (!sorter.running_) return;
+    if (!sorter.running()) return;
 
     Recurse(l, m - 1, sorter);
     Recurse(m + 1, r, sorter);
@@ -13,7 +13,7 @@ void QuickSort::Recurse(int l, int r, Sorter &sorter) {
 }
 
 size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
-  Uint32 pivot = sorter.data_[r];
+  Uint32 pivot = sorter.data(r);
   int i = l - 1;
   std::vector<size_t> indexes;
   for (size_t j = l; j <= r; ++j) {
@@ -21,8 +21,8 @@ size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
   }
   sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   for (size_t j = l; j < r; ++j) {
-    if (!sorter.running_) return 0;
-    if (sorter.data_[j] < pivot) {
+    if (!sorter.running()) return 0;
+    if (sorter.data(j) < pivot) {
       ++i;
       sorter.Swap(i, j, {100, 180, 100, SDL_ALPHA_OPAQUE});
     }

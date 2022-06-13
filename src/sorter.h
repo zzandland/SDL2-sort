@@ -18,10 +18,6 @@ enum class Algorithm {
 
 class Sorter {
  public:
-  bool running_;
-  size_t size_;
-  std::vector<Uint32> data_;
-  std::unique_ptr<Screen> screen_;
   Sorter(std::unique_ptr<Screen> &&screen, size_t size);
   void PollAndHandleSDLEvent();
   void StartAndStop();
@@ -34,13 +30,22 @@ class Sorter {
   void Delete(std::vector<size_t> &indexes);
   void Delete(size_t index);
   void set_selected(Algorithm algorithm);
+  Uint32 data(size_t index);
+  void set_data(size_t index, Uint32 val);
+  size_t size();
+  void set_size(const Uint32 size);
+  bool running();
+  void toggle_running();
 
  private:
-  Algorithm selected_;
+  std::vector<Uint32> data_;
+  size_t size_;
+  bool running_;
   std::thread t_;
+  Algorithm selected_;
+  std::unique_ptr<Screen> screen_;
 
   void Init();
   void Sort();
   void Randomize();
-  void set_size(const Uint32 size);
 };

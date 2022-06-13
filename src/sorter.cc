@@ -69,6 +69,16 @@ void Sorter::set_size(const Uint32 size) {
 
 void Sorter::set_selected(Algorithm algorithm) { selected_ = algorithm; }
 
+Uint32 Sorter::data(size_t index) { return data_[index]; }
+
+void Sorter::set_data(size_t index, Uint32 val) { data_[index] = val; }
+
+size_t Sorter::size() { return size_; }
+
+bool Sorter::running() { return running_; }
+
+void Sorter::toggle_running() { running_ = !running_; }
+
 void Sorter::Randomize() {
   size_t len = data_.size();
   size_t seed = (unsigned)time(NULL);
