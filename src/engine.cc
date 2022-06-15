@@ -91,6 +91,9 @@ void Engine::PollAndHandleSDLEvent() {
         case SDLK_x:
           sorter_->set_diagram(DiagramType::kScatterPlot);
           break;
+        case SDLK_c:
+          sorter_->set_diagram(DiagramType::kHistogram);
+          break;
         default:
           break;
       }

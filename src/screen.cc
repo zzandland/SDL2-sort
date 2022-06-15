@@ -1,5 +1,6 @@
 #include "screen.h"
 
+#include "diagram/histogram.h"
 #include "diagram/line.h"
 #include "diagram/scatter_plot.h"
 
@@ -45,8 +46,13 @@ void Screen::set_diagram(DiagramType diagram) {
       diagram_ =
           std::make_unique<ScatterPlot>(renderer_, size_, width_, height_);
       break;
+    case DiagramType::kHistogram:
+      diagram_ = std::make_unique<Histogram>(renderer_, size_, width_, height_);
+      break;
     default:
       break;
   }
   Init();
 }
+
+Uint32 Screen::width() { return width_; }

@@ -79,7 +79,14 @@ bool Sorter::running() { return running_; }
 
 void Sorter::toggle_running() { running_ = !running_; }
 
-void Sorter::set_diagram(DiagramType diagram) { screen_->set_diagram(diagram); }
+void Sorter::set_diagram(DiagramType diagram) {
+  if (diagram == DiagramType::kHistogram) {
+    set_size(256);
+  } else {
+    set_size(screen_->width());
+  }
+  screen_->set_diagram(diagram);
+}
 
 void Sorter::Randomize() {
   size_t len = data_.size();

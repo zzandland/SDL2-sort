@@ -6,7 +6,7 @@
 
 #include "diagram/diagram.h"
 
-enum class DiagramType { kLine, kScatterPlot };
+enum class DiagramType { kLine, kScatterPlot, kHistogram };
 
 class Screen {
  public:
@@ -20,6 +20,7 @@ class Screen {
               SDL_Color color);
   void Update(std::vector<Uint32>& data, size_t index, SDL_Color color);
   void set_diagram(DiagramType diagram);
+  Uint32 width();
 
  private:
   Uint32 width_;

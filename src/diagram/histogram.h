@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "diagram/diagram.h"
 
 class Histogram : public Diagram {
@@ -10,11 +8,13 @@ class Histogram : public Diagram {
             Uint32 screen_height);
   void Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
             Uint32 screen_height);
-  void Update(SDL_Renderer* renderer, size_t a, size_t b, bool isSwap);
+  void Render(SDL_Renderer* renderer);
+  void Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
+              std::vector<size_t>& indexes, SDL_Color color);
+  void Update(SDL_Renderer* renderer, std::vector<Uint32>& data, size_t index,
+              SDL_Color color);
 
  private:
-  std::vector<SDL_Rect> rects_;
-
-  void Swap(size_t a, size_t b);
-  void ResetRect(SDL_Renderer* renderer, size_t rect_index);
+  Uint32 screen_width_;
+  Uint32 screen_height_;
 };
