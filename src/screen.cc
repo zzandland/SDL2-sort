@@ -1,18 +1,17 @@
 #include "screen.h"
 
-#include "diagram/histogram.h"
-#include "diagram/scatter_plot.h"
+#include "diagram/histogram_factory.h"     // Include factory
+#include "diagram/scatter_plot_factory.h"  // Include factory
 
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
                const Uint32 size)
     : renderer_(renderer), width_(width), height_(height), size_(size) {
-  diagram_ = std::make_unique<Histogram>(renderer, size, width, height);
+  // Initialize with a default diagram using its factory
+  HistogramFactory histogram_factory;
+  diagram_ = histogram_factory.CreateDiagram(renderer_, size_, width_, height_);
 }
 
-Screen::~Screen() {
-  SDL_DestroyRenderer(renderer_);
-  renderer_ = nullptr;
-}
+Screen::~Screen() { renderer_ = nullptr; }
 
 void Screen::set_size(const Uint32 size) {
   size_ = size;
@@ -36,18 +35,26 @@ void Screen::Update(std::vector<Uint32>& data, size_t index, SDL_Color color) {
   diagram_->Update(renderer_, data, index, color);
 }
 
-void Screen::set_diagram(DiagramType diagram) {
-  switch (diagram) {
-    case DiagramType::kScatterPlot:
+void Screen::set_diagram(DiagramType diagramType) {
+  // Use factories to create diagrams
+  switch (diagramType) {
+    case DiagramType::kScatterPlot: {
+      ScatterPlotFactory scatter_plot_factory;
       diagram_ =
-          std::make_unique<ScatterPlot>(renderer_, size_, width_, height_);
+          scatter_plot_factory.CreateDiagram(renderer_, size_, width_, height_);
       break;
-    case DiagramType::kHistogram:
-      diagram_ = std::make_unique<Histogram>(renderer_, size_, width_, height_);
+    }
+    case DiagramType::kHistogram: {
+      HistogramFactory histogram_factory;
+      diagram_ =
+          histogram_factory.CreateDiagram(renderer_, size_, width_, height_);
       break;
+    }
     default:
+      // Optionally handle default case, maybe log an error or do nothing
       break;
   }
+  // Re-initialize after changing the diagram
   Init();
 }
 

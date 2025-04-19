@@ -20,6 +20,7 @@ class Engine {
   void Run();
 
  private:
+  SDL_Renderer* renderer_;
   SDL_Window* window_;
   SDL_GLContext context_;
   std::unique_ptr<Sorter> sorter_;
