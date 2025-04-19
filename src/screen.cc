@@ -1,13 +1,12 @@
 #include "screen.h"
 
 #include "diagram/histogram.h"
-#include "diagram/line.h"
 #include "diagram/scatter_plot.h"
 
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
                const Uint32 size)
     : renderer_(renderer), width_(width), height_(height), size_(size) {
-  diagram_ = std::make_unique<Line>(renderer, size, width, height);
+  diagram_ = std::make_unique<Histogram>(renderer, size, width, height);
 }
 
 Screen::~Screen() {
@@ -39,9 +38,6 @@ void Screen::Update(std::vector<Uint32>& data, size_t index, SDL_Color color) {
 
 void Screen::set_diagram(DiagramType diagram) {
   switch (diagram) {
-    case DiagramType::kLine:
-      diagram_ = std::make_unique<Line>(renderer_, size_, width_, height_);
-      break;
     case DiagramType::kScatterPlot:
       diagram_ =
           std::make_unique<ScatterPlot>(renderer_, size_, width_, height_);

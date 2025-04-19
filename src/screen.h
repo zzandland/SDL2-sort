@@ -6,7 +6,7 @@
 
 #include "diagram/diagram.h"
 
-enum class DiagramType { kLine, kScatterPlot, kHistogram };
+enum class DiagramType { kScatterPlot, kHistogram };
 
 class Screen {
  public:
