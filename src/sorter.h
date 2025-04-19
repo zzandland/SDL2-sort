@@ -5,7 +5,7 @@
 #include <thread>
 #include <vector>
 
-#include "screen.h"
+#include "observer.h"
 
 enum class Algorithm {
   kBubbleSort,
@@ -16,9 +16,9 @@ enum class Algorithm {
   kHeapSort
 };
 
-class Sorter {
+class Sorter : public Observable {
  public:
-  Sorter(std::unique_ptr<Screen> &&screen, size_t size);
+  Sorter(size_t size);
   void PollAndHandleSDLEvent();
   void StartAndStop();
   void Highlight(std::vector<size_t> &indexes);
@@ -36,7 +36,6 @@ class Sorter {
   void set_size(const Uint32 size);
   bool running();
   void toggle_running();
-  void set_diagram(DiagramType diagram);
 
  private:
   std::vector<Uint32> data_;
@@ -44,7 +43,6 @@ class Sorter {
   bool running_;
   std::thread t_;
   Algorithm selected_;
-  std::unique_ptr<Screen> screen_;
 
   void Init();
   void Sort();

@@ -5,10 +5,11 @@
 #include <memory>
 
 #include "diagram/diagram.h"
+#include "observer.h"
 
 enum class DiagramType { kScatterPlot, kHistogram };
 
-class Screen {
+class Screen : public Observer {
  public:
   Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
          const Uint32 size);
@@ -16,9 +17,7 @@ class Screen {
   void set_size(const Uint32 size);
   void Init();
   void Render();
-  void Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
-              SDL_Color color);
-  void Update(std::vector<Uint32>& data, size_t index, SDL_Color color);
+  void Update(SortEvent e);
   void set_diagram(DiagramType diagramType);
   Uint32 width();
 

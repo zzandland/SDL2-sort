@@ -14,6 +14,7 @@ enable_testing()
 set(TARGET_SRC "")
 list(APPEND TARGET_SRC
     src/helper.h
+    src/observer.cc
     src/diagram/histogram.cc
     src/diagram/histogram_factory.cc
     src/diagram/scatter_plot.cc

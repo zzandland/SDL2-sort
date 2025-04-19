@@ -24,6 +24,7 @@ class Engine {
   SDL_Window* window_;
   SDL_GLContext context_;
   std::unique_ptr<Sorter> sorter_;
+  std::shared_ptr<Screen> screen_;
 
   void PollAndHandleSDLEvent();
 };

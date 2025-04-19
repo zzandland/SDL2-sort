@@ -44,14 +44,3 @@ void Histogram::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
     SDL_RenderDrawRect(renderer, &rect);
   }
 }
-
-void Histogram::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
-                       size_t index, SDL_Color color) {
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-  size_t size = data.size();
-  const Sint32 rect_width = screen_width_ / size;
-  Sint32 height = ((double)screen_height_ / size) * data[index];
-  SDL_Rect rect = {rect_width * (Sint32)index, (Sint32)screen_height_ - height,
-                   rect_width, height};
-  SDL_RenderDrawRect(renderer, &rect);
-}

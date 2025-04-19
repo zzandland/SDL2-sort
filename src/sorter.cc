@@ -7,11 +7,8 @@
 #include "algorithm/quick_sort.h"
 #include "algorithm/selection_sort.h"
 
-Sorter::Sorter(std::unique_ptr<Screen> &&screen, size_t size)
-    : screen_(std::move(screen)),
-      running_(false),
-      size_(size),
-      selected_(Algorithm::kBubbleSort) {
+Sorter::Sorter(size_t size)
+    : running_(false), size_(size), selected_(Algorithm::kBubbleSort) {
   Init();
 }
 
@@ -20,7 +17,7 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
-  screen_->Init();
+  Notify(SortEvent(SortEvent::Type::Init));
 }
 
 void Sorter::StartAndStop() {
@@ -61,12 +58,6 @@ void Sorter::Sort() {
   running_ = false;
 }
 
-void Sorter::set_size(const Uint32 size) {
-  size_ = size;
-  screen_->set_size(size);
-  Init();
-}
-
 void Sorter::set_selected(Algorithm algorithm) { selected_ = algorithm; }
 
 Uint32 Sorter::data(size_t index) { return data_[index]; }
@@ -79,8 +70,6 @@ bool Sorter::running() { return running_; }
 
 void Sorter::toggle_running() { running_ = !running_; }
 
-void Sorter::set_diagram(DiagramType diagram) { screen_->set_diagram(diagram); }
-
 void Sorter::Randomize() {
   size_t len = data_.size();
   size_t seed = (unsigned)time(NULL);
@@ -92,34 +81,28 @@ void Sorter::Randomize() {
   }
 }
 
-void Sorter::Highlight(std::vector<size_t> &indexes) {
-  screen_->Update(data_, indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
-
-  screen_->Render();
-
-  // change the colors to be regular
-  screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
-}
-
 void Sorter::Highlight(size_t index) {
-  screen_->Update(data_, index, {100, 180, 100, SDL_ALPHA_OPAQUE});
+  // highlight the element at index
+  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
 
-  screen_->Render();
+                   {100, 180, 100, SDL_ALPHA_OPAQUE}));
+  Notify(SortEvent(SortEvent::Type::Render));
 
-  // change the colors to be regular
-  screen_->Update(data_, index, {170, 183, 184, SDL_ALPHA_OPAQUE});
+  // change the color to be regular
+  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
+                   {170, 183, 184, SDL_ALPHA_OPAQUE}));
 }
 
 void Sorter::Color(std::vector<size_t> &indexes, SDL_Color color) {
-  screen_->Update(data_, indexes, color);
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes, color));
 
-  screen_->Render();
+  Notify(SortEvent(SortEvent::Type::Render));
 }
 
 void Sorter::Color(size_t index, SDL_Color color) {
-  screen_->Update(data_, index, color);
+  Notify(SortEvent(SortEvent::Type::Update, data_, {index}, color));
 
-  screen_->Render();
+  Notify(SortEvent(SortEvent::Type::Render));
 }
 
 void Sorter::Swap(size_t a, size_t b) {
@@ -130,12 +113,11 @@ void Sorter::Swap(size_t a, size_t b) {
   std::swap(data_[a], data_[b]);
 
   // color the two elements being swapped
-  screen_->Update(data_, indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
-
-  screen_->Render();
+  Color(indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
 
   // change the colors to be regular
-  screen_->Update(data_, indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes,
+                   {170, 183, 184, SDL_ALPHA_OPAQUE}));
 }
 
 void Sorter::Swap(size_t a, size_t b, SDL_Color color) {
@@ -146,18 +128,18 @@ void Sorter::Swap(size_t a, size_t b, SDL_Color color) {
   std::swap(data_[a], data_[b]);
 
   // color the two elements being swapped
-  screen_->Update(data_, indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
-
-  screen_->Render();
+  Color(indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
 
   // change the colors to be what's provided in the input param
-  screen_->Update(data_, indexes, color);
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes, color));
 }
 
 void Sorter::Delete(std::vector<size_t> &indexes) {
-  screen_->Update(data_, indexes, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes,
+                   {0, 0, 0, SDL_ALPHA_TRANSPARENT}));
 }
 
 void Sorter::Delete(size_t index) {
-  screen_->Update(data_, index, {0, 0, 0, SDL_ALPHA_TRANSPARENT});
+  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
+                   {0, 0, 0, SDL_ALPHA_TRANSPARENT}));
 }

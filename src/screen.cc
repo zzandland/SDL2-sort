@@ -26,13 +26,20 @@ void Screen::Init() {
 
 void Screen::Render() { diagram_->Render(renderer_); }
 
-void Screen::Update(std::vector<Uint32>& data, std::vector<size_t>& indexes,
-                    SDL_Color color) {
-  diagram_->Update(renderer_, data, indexes, color);
-}
-
-void Screen::Update(std::vector<Uint32>& data, size_t index, SDL_Color color) {
-  diagram_->Update(renderer_, data, index, color);
+void Screen::Update(SortEvent e) {
+  switch (e.type) {
+    case SortEvent::Type::Update:
+      diagram_->Update(renderer_, e.data, e.indices, e.color);
+      break;
+    case SortEvent::Type::Render:
+      diagram_->Render(renderer_);
+      break;
+    case SortEvent::Type::Init:
+      Init();
+      break;
+    default:
+      break;
+  }
 }
 
 void Screen::set_diagram(DiagramType diagramType) {

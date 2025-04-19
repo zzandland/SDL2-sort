@@ -12,6 +12,4 @@ class Diagram {
   virtual void Render(SDL_Renderer* renderer) = 0;
   virtual void Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
                       std::vector<size_t>& indexes, SDL_Color color) = 0;
-  virtual void Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
-                      size_t index, SDL_Color color) = 0;
 };

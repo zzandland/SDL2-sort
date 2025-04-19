@@ -48,10 +48,11 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
 
   const Uint32 size = 256;
 
-  sorter_ = std::make_unique<Sorter>(
-      std::make_unique<Screen>(renderer_, static_cast<Uint32>(drawable_width),
-                               static_cast<Uint32>(drawable_height), size),
-      size);
+  screen_ =
+      std::make_shared<Screen>(renderer_, static_cast<Uint32>(drawable_width),
+                               static_cast<Uint32>(drawable_height), size);
+  sorter_ = std::make_unique<Sorter>(size);
+  sorter_->AddObserver(screen_);
 }
 
 Engine::~Engine() {
@@ -98,10 +99,10 @@ void Engine::PollAndHandleSDLEvent() {
           sorter_->set_selected(Algorithm::kHeapSort);
           break;
         case SDLK_z:
-          sorter_->set_diagram(DiagramType::kHistogram);
+          screen_->set_diagram(DiagramType::kHistogram);
           break;
         case SDLK_x:
-          sorter_->set_diagram(DiagramType::kScatterPlot);
+          screen_->set_diagram(DiagramType::kScatterPlot);
           break;
         default:
           break;

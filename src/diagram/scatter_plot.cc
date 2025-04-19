@@ -60,21 +60,3 @@ void ScatterPlot::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
     SDL_RenderFillRect(renderer, &rect);
   }
 }
-
-void ScatterPlot::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
-                         size_t index, SDL_Color color) {
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-  size_t size = data.size();
-  const double width_scale = (double)screen_width_ / size;
-  // Calculate point size based on height and number of items, ensure minimum
-  // size of 1
-  const int point_size = std::max(1, static_cast<int>(screen_height_ / size));
-  const Sint32 height = ((double)screen_height_ / size) * data[index];
-  const Sint32 x = index * width_scale;
-  const Sint32 y = screen_height_ - height;
-
-  // Draw a small rectangle instead of a point
-  SDL_Rect rect = {x - point_size / 2, y - point_size / 2, point_size,
-                   point_size};
-  SDL_RenderFillRect(renderer, &rect);
-}
