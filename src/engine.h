@@ -18,6 +18,7 @@ class Engine {
   Engine(const Uint32 width, const Uint32 height);
   ~Engine();
   void Run();
+  void MainLoopIteration();  // Add this method
 
  private:
   SDL_Renderer* renderer_;

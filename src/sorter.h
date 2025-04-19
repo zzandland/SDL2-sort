@@ -19,15 +19,16 @@ enum class Algorithm {
 class Sorter : public Observable {
  public:
   Sorter(size_t size);
+  ~Sorter();
   void PollAndHandleSDLEvent();
   void StartAndStop();
-  void Highlight(std::vector<size_t> &indexes);
+  void Highlight(std::vector<size_t>& indexes);
   void Highlight(size_t index);
-  void Color(std::vector<size_t> &indexes, SDL_Color color);
+  void Color(std::vector<size_t>& indexes, SDL_Color color);
   void Color(size_t index, SDL_Color color);
   void Swap(size_t a, size_t b);
   void Swap(size_t a, size_t b, SDL_Color color);
-  void Delete(std::vector<size_t> &indexes);
+  void Delete(std::vector<size_t>& indexes);
   void Delete(size_t index);
   void set_selected(Algorithm algorithm);
   Uint32 data(size_t index);

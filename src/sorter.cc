@@ -12,6 +12,16 @@ Sorter::Sorter(size_t size)
   Init();
 }
 
+Sorter::~Sorter() {
+  // Ensure the thread is stopped and joined when the Sorter is destroyed
+  if (running_) {
+    running_ = false;
+  }
+  if (t_.joinable()) {
+    t_.join();
+  }
+}
+
 void Sorter::Init() {
   data_.resize(size_);
   for (size_t i = 0; i < size_; ++i) {
@@ -21,13 +31,22 @@ void Sorter::Init() {
 }
 
 void Sorter::StartAndStop() {
-  running_ = !running_;
   if (running_) {
-    t_ = std::thread(&Sorter::Sort, this);
-    t_.detach();
-  } else {
+    // Request the thread to stop
     running_ = false;
-    Init();
+    // Wait for the thread to finish cleanly
+    if (t_.joinable()) {
+      t_.join();
+    }
+  } else {
+    // Ensure any previous thread is joined before starting a new one
+    // This handles cases where the thread finished but wasn't joined yet
+    if (t_.joinable()) {
+      t_.join();
+    }
+    // Start the new sorting thread
+    running_ = true;
+    t_ = std::thread(&Sorter::Sort, this);
   }
 }
 

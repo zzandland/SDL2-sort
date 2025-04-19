@@ -2,8 +2,6 @@
 
 #include <algorithm>  // For std::remove
 
-#include "sorter.h"
-
 void Observable::Notify(SortEvent event) {
   for (std::shared_ptr<Observer> observer : observers_) {
     if (observer != nullptr) {
