@@ -16,4 +16,5 @@ class ScatterPlot : public Diagram {
 
  private:
   Uint32 screen_height_;
+  Uint32 screen_width_;  // Add screen_width_ member
 };

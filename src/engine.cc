@@ -35,12 +35,24 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
+  // Get the actual drawable size which might differ due to High DPI
+  int drawable_width, drawable_height;
+  if (SDL_GetRendererOutputSize(renderer, &drawable_width, &drawable_height) <
+      0) {
+    err_msg << "Could not get renderer output size: " << SDL_GetError() << '\n';
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window_);
+    throw std::runtime_error(err_msg.str());
+  }
+
   context_ = SDL_GL_CreateContext(window_);
 
-  const Uint32 size = width;
+  const Uint32 size = 256;
 
   sorter_ = std::make_unique<Sorter>(
-      std::make_unique<Screen>(renderer, width, height, size), size);
+      std::make_unique<Screen>(renderer, static_cast<Uint32>(drawable_width),
+                               static_cast<Uint32>(drawable_height), size),
+      size);
 }
 
 Engine::~Engine() {
@@ -86,13 +98,10 @@ void Engine::PollAndHandleSDLEvent() {
           sorter_->set_selected(Algorithm::kHeapSort);
           break;
         case SDLK_z:
-          sorter_->set_diagram(DiagramType::kLine);
+          sorter_->set_diagram(DiagramType::kHistogram);
           break;
         case SDLK_x:
           sorter_->set_diagram(DiagramType::kScatterPlot);
-          break;
-        case SDLK_c:
-          sorter_->set_diagram(DiagramType::kHistogram);
           break;
         default:
           break;
