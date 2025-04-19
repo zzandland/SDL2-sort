@@ -20,7 +20,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
   }
 
   window_ = SDL_CreateWindow(
-      "SDL2Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
+      "SDL2 Sort", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
       height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
   if (nullptr == window_) {
