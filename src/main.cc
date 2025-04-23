@@ -9,8 +9,8 @@
 #include "engine.h"
 #include "helper.h"
 
-const Uint32 winWidth = 1024;
-const Uint32 winHeight = 768;
+const Uint32 winWidth = 600;
+const Uint32 winHeight = 400;
 
 int main(int argc, char **argv) {
   std::unique_ptr<Engine> engine;

@@ -58,7 +58,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
-  const Uint32 size = 256;
+  const Uint32 size = 200;
 
   screen_ =
       std::make_shared<Screen>(renderer_, static_cast<Uint32>(drawable_width),
@@ -91,7 +91,7 @@ void Engine::Run() {
     try {
       MainLoopIteration();
       // Add a small delay to prevent high CPU usage on native
-      SDL_Delay(16);  // ~60 FPS
+      // SDL_Delay(16);  // ~60 FPS
     } catch (const sdl_exception::EarlyQuit&) {
       break;  // Exit the loop if EarlyQuit is thrown
     }
@@ -102,12 +102,6 @@ void Engine::Run() {
 void Engine::MainLoopIteration() {
   // This function contains one iteration of the main loop
   PollAndHandleSDLEvent();
-  // Add rendering logic here if it's not implicitly handled by observers
-  // For example:
-  // SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255); // Clear screen
-  // SDL_RenderClear(renderer_);
-  // screen_->Draw(); // Assuming Screen has a Draw method
-  // SDL_RenderPresent(renderer_);
 }
 
 void Engine::PollAndHandleSDLEvent() {
@@ -122,38 +116,42 @@ void Engine::PollAndHandleSDLEvent() {
       throw sdl_exception::EarlyQuit();
 #endif
     }
-    if (SDL_KEYDOWN == event.type) {
-      switch (event.key.keysym.sym) {
-        case SDLK_SPACE:
-          sorter_->StartAndStop();
-          break;
-        case SDLK_1:
-          sorter_->set_selected(Algorithm::kBubbleSort);
-          break;
-        case SDLK_2:
-          sorter_->set_selected(Algorithm::kInsertionSort);
-          break;
-        case SDLK_3:
-          sorter_->set_selected(Algorithm::kSelectionSort);
-          break;
-        case SDLK_4:
-          sorter_->set_selected(Algorithm::kQuickSort);
-          break;
-        case SDLK_5:
-          sorter_->set_selected(Algorithm::kMergeSort);
-          break;
-        case SDLK_6:
-          sorter_->set_selected(Algorithm::kHeapSort);
-          break;
-        case SDLK_z:
-          screen_->set_diagram(DiagramType::kHistogram);
-          break;
-        case SDLK_x:
-          screen_->set_diagram(DiagramType::kScatterPlot);
-          break;
-        default:
-          break;
-      }
+    switch (event.type) {
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_SPACE:
+            sorter_->StartAndStop();
+            break;
+          case SDLK_1:
+            sorter_->set_selected(Algorithm::kBubbleSort);
+            break;
+          case SDLK_2:
+            sorter_->set_selected(Algorithm::kInsertionSort);
+            break;
+          case SDLK_3:
+            sorter_->set_selected(Algorithm::kSelectionSort);
+            break;
+          case SDLK_4:
+            sorter_->set_selected(Algorithm::kQuickSort);
+            break;
+          case SDLK_5:
+            sorter_->set_selected(Algorithm::kMergeSort);
+            break;
+          case SDLK_6:
+            sorter_->set_selected(Algorithm::kHeapSort);
+            break;
+          case SDLK_z:
+            screen_->set_diagram(DiagramType::kHistogram);
+            break;
+          case SDLK_x:
+            screen_->set_diagram(DiagramType::kScatterPlot);
+            break;
+          default:
+            break;
+        }
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        sorter_->StartAndStop();  // Start or stop sorting on mouse click
     }
   }
 }
