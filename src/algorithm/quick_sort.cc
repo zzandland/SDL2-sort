@@ -19,17 +19,15 @@ size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
   for (size_t j = l; j <= r; ++j) {
     indexes.push_back(j);
   }
-  sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   for (size_t j = l; j < r; ++j) {
     if (!sorter.running()) return 0;
     if (sorter.data(j) < pivot) {
       ++i;
-      sorter.Swap(i, j, {100, 180, 100, SDL_ALPHA_OPAQUE});
+      sorter.Swap(i, j);
     }
   }
   if (i + 1 != r) {
-    sorter.Swap(i + 1, r, {100, 180, 100, SDL_ALPHA_OPAQUE});
+    sorter.Swap(i + 1, r);
   }
-  sorter.Color(indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
   return i + 1;
 }

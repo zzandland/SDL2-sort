@@ -42,7 +42,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
-  renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
+  renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
   if (nullptr == renderer_) {
     err_msg << "Could not create renderer: " << SDL_GetError() << '\n';
     throw std::runtime_error(err_msg.str());

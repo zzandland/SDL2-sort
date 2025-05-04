@@ -22,7 +22,6 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
   for (int h = l; h <= r; ++h) {
     indexes.push_back(h);
   }
-  sorter.Color(indexes, {100, 180, 100, SDL_ALPHA_OPAQUE});
   int tmp[r - l + 1];
   while (i <= m || j <= r) {
     Uint32 lVal = (i <= m) ? sorter.data(i) : UINT_MAX;
@@ -38,10 +37,7 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
   k = 0;  // reuse the variable for updating the actual data
   while (l + k <= r) {
     if (!sorter.running()) return;
-    sorter.Delete(l + k);
-    sorter.set_data(l + k, tmp[k]);
-    sorter.Color(l + k, {165, 105, 189, SDL_ALPHA_OPAQUE});
+    sorter.Update(l + k, tmp[k]);
     k++;
   }
-  sorter.Color(indexes, {170, 183, 184, SDL_ALPHA_OPAQUE});
 }

@@ -32,17 +32,11 @@ void ScatterPlot::Init(SDL_Renderer* renderer, size_t size, Uint32 screen_width,
                      point_size};
     SDL_RenderFillRect(renderer, &rect);
   }
-
-  SDL_RenderPresent(renderer);
-}
-
-void ScatterPlot::Render(SDL_Renderer* renderer) {
-  SDL_RenderPresent(renderer);
 }
 
 void ScatterPlot::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
-                         std::vector<size_t>& indexes, SDL_Color color) {
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+                         std::vector<size_t>& indexes) {
+  SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
   size_t size = data.size();
   Sint32 height;
   const double width_scale = (double)screen_width_ / size;
@@ -50,9 +44,9 @@ void ScatterPlot::Update(SDL_Renderer* renderer, std::vector<Uint32>& data,
   // size of 1
   const int point_size = std::max(1, static_cast<int>(screen_height_ / size));
 
-  for (size_t index : indexes) {
-    height = ((double)screen_height_ / size) * data[index];
-    const Sint32 x = index * width_scale;
+  for (size_t i = 0; i < size; ++i) {
+    height = ((double)screen_height_ / size) * data[i];
+    const Sint32 x = i * width_scale;
     const Sint32 y = screen_height_ - height;
     // Draw a small rectangle instead of a point
     SDL_Rect rect = {x - point_size / 2, y - point_size / 2, point_size,

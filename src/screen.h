@@ -16,7 +16,6 @@ class Screen : public Observer {
   ~Screen();
   void set_size(const Uint32 size);
   void Init();
-  void Render();
   void Update(SortEvent e);
   void set_diagram(DiagramType diagramType);
   Uint32 width();

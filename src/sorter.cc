@@ -100,65 +100,15 @@ void Sorter::Randomize() {
   }
 }
 
-void Sorter::Highlight(size_t index) {
-  // highlight the element at index
-  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
-
-                   {100, 180, 100, SDL_ALPHA_OPAQUE}));
-  Notify(SortEvent(SortEvent::Type::Render));
-
-  // change the color to be regular
-  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
-                   {170, 183, 184, SDL_ALPHA_OPAQUE}));
-}
-
-void Sorter::Color(std::vector<size_t> &indexes, SDL_Color color) {
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes, color));
-
-  Notify(SortEvent(SortEvent::Type::Render));
-}
-
-void Sorter::Color(size_t index, SDL_Color color) {
-  Notify(SortEvent(SortEvent::Type::Update, data_, {index}, color));
-
-  Notify(SortEvent(SortEvent::Type::Render));
+void Sorter::Update(size_t index, Uint32 val) {
+  data_[index] = val;
+  std::vector<size_t> indexes{index};
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes));
 }
 
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
-  // first clear the original elements
-  Delete(indexes);
-
   std::swap(data_[a], data_[b]);
 
-  // color the two elements being swapped
-  Color(indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
-
-  // change the colors to be regular
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes,
-                   {170, 183, 184, SDL_ALPHA_OPAQUE}));
-}
-
-void Sorter::Swap(size_t a, size_t b, SDL_Color color) {
-  std::vector<size_t> indexes{a, b};
-  // first clear the original elements
-  Delete(indexes);
-
-  std::swap(data_[a], data_[b]);
-
-  // color the two elements being swapped
-  Color(indexes, {165, 105, 189, SDL_ALPHA_OPAQUE});
-
-  // change the colors to be what's provided in the input param
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes, color));
-}
-
-void Sorter::Delete(std::vector<size_t> &indexes) {
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes,
-                   {0, 0, 0, SDL_ALPHA_TRANSPARENT}));
-}
-
-void Sorter::Delete(size_t index) {
-  Notify(SortEvent(SortEvent::Type::Update, data_, {index},
-                   {0, 0, 0, SDL_ALPHA_TRANSPARENT}));
+  Notify(SortEvent(SortEvent::Type::Update, data_, indexes));
 }

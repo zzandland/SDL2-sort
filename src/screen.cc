@@ -22,17 +22,16 @@ void Screen::Init() {
   SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(renderer_);
   diagram_->Init(renderer_, size_, width_, height_);
+  SDL_RenderPresent(renderer_);
 }
-
-void Screen::Render() { diagram_->Render(renderer_); }
 
 void Screen::Update(SortEvent e) {
   switch (e.type) {
     case SortEvent::Type::Update:
-      diagram_->Update(renderer_, e.data, e.indices, e.color);
-      break;
-    case SortEvent::Type::Render:
-      diagram_->Render(renderer_);
+      SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+      SDL_RenderClear(renderer_);
+      diagram_->Update(renderer_, e.data, e.indices);
+      SDL_RenderPresent(renderer_);
       break;
     case SortEvent::Type::Init:
       Init();
@@ -45,16 +44,16 @@ void Screen::Update(SortEvent e) {
 void Screen::set_diagram(DiagramType diagramType) {
   // Use factories to create diagrams
   switch (diagramType) {
-    case DiagramType::kScatterPlot: {
-      ScatterPlotFactory scatter_plot_factory;
-      diagram_ =
-          scatter_plot_factory.CreateDiagram(renderer_, size_, width_, height_);
-      break;
-    }
     case DiagramType::kHistogram: {
       HistogramFactory histogram_factory;
       diagram_ =
           histogram_factory.CreateDiagram(renderer_, size_, width_, height_);
+      break;
+    }
+    case DiagramType::kScatterPlot: {
+      ScatterPlotFactory scatter_plot_factory;
+      diagram_ =
+          scatter_plot_factory.CreateDiagram(renderer_, size_, width_, height_);
       break;
     }
     default:

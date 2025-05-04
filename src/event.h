@@ -7,18 +7,16 @@
 #include <vector>
 
 struct SortEvent {
-  enum class Type { Update, Render, Init };
+  enum class Type { Update, Init };
 
   Type type;
   std::vector<Uint32> data;
   std::vector<size_t> indices;
-  SDL_Color color;
 
-  inline SortEvent(Type t, std::vector<Uint32> d, std::vector<size_t> i,
-                   SDL_Color c)
-      : type(t), data(std::move(d)), indices(std::move(i)), color(c) {}
+  inline SortEvent(Type t, std::vector<Uint32> d, std::vector<size_t> i)
+      : type(t), data(std::move(d)), indices(std::move(i)) {}
 
-  inline SortEvent(Type t) : type(t), data{}, indices{}, color{} {}
+  inline SortEvent(Type t) : type(t), data{}, indices{} {}
 };
 
 #endif  // EVENT_H
