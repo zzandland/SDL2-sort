@@ -12,6 +12,8 @@
 #include "engine.h"
 
 std::ostringstream err_msg;
+Uint32 SDL_SORT_EVENT;
+SDL_sem* event_sem;
 
 // Global or static pointer to the engine instance for the Emscripten loop
 Engine* g_engine_instance = nullptr;
@@ -33,16 +35,18 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     std::cout << "Warning: Linear Texture Filtering not enabled.\n";
   }
 
-  window_ = SDL_CreateWindow("SDL2 Sort", SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, width, height,
-                             SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+  // Modify the window creation to include OpenGL/WebGL context flags
+  window_ = SDL_CreateWindow(
+      "SDL2 Sort", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
+      height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
   if (nullptr == window_) {
     err_msg << "Could not create window: " << SDL_GetError() << '\n';
     throw std::runtime_error(err_msg.str());
   }
 
-  renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+  renderer_ = SDL_CreateRenderer(
+      window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (nullptr == renderer_) {
     err_msg << "Could not create renderer: " << SDL_GetError() << '\n';
     throw std::runtime_error(err_msg.str());
@@ -57,6 +61,17 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     SDL_DestroyWindow(window_);
     throw std::runtime_error(err_msg.str());
   }
+
+  // Register SDL event type for custom events
+  SDL_SORT_EVENT = SDL_RegisterEvents(1);
+  if (SDL_SORT_EVENT == ((Uint32)-1)) {
+    err_msg << "Could not register custom SDL event: " << SDL_GetError()
+            << '\n';
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(window_);
+    throw std::runtime_error(err_msg.str());
+  }
+  event_sem = SDL_CreateSemaphore(10);
 
   const Uint32 size = 200;
 
@@ -73,6 +88,7 @@ Engine::~Engine() {
   SDL_DestroyRenderer(renderer_);
   SDL_DestroyWindow(window_);
   window_ = nullptr;
+  SDL_DestroySemaphore(event_sem);
 
   SDL_Quit();
 
@@ -84,14 +100,14 @@ void Engine::Run() {
   // For Emscripten, set the main loop function
   // The -1 means use browser's requestAnimationFrame
   // 1 means simulate infinite loop
-  emscripten_set_main_loop(emscripten_main_loop_wrapper, -1, 1);
+  emscripten_set_main_loop(emscripten_main_loop_wrapper, 60, 1);
 #else
   // Native desktop loop
   while (true) {
     try {
       MainLoopIteration();
       // Add a small delay to prevent high CPU usage on native
-      // SDL_Delay(16);  // ~60 FPS
+      SDL_Delay(16);
     } catch (const sdl_exception::EarlyQuit&) {
       break;  // Exit the loop if EarlyQuit is thrown
     }
@@ -107,6 +123,19 @@ void Engine::MainLoopIteration() {
 void Engine::PollAndHandleSDLEvent() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
+    if (SDL_SORT_EVENT == event.type) {
+      SortEvent* sort_event = static_cast<SortEvent*>(event.user.data1);
+      if (sort_event) {
+        screen_->Update(*sort_event);
+        delete sort_event;  // Clean up the event after handling
+      } else {
+        err_msg << "Received null SortEvent in SDL_SORT_EVENT.\n";
+        throw std::runtime_error(err_msg.str());
+      }
+      SDL_SemPost(event_sem);
+      continue;  // Skip further processing for this event
+    }
+
     if (SDL_QUIT == event.type) {
       // On Emscripten, throwing might not exit cleanly depending on flags.
       // Consider calling emscripten_cancel_main_loop() or similar.

@@ -27,7 +27,7 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
-  Notify(SortEvent(SortEvent::Type::Init));
+  Notify(new SortEvent(SortEvent::Type::Init));
 }
 
 void Sorter::StartAndStop() {
@@ -52,6 +52,8 @@ void Sorter::StartAndStop() {
 
 void Sorter::Sort() {
   Randomize();
+  std::cout << "Starting sorting with algorithm: "
+            << static_cast<int>(selected_) << std::endl;
   switch (selected_) {
     case Algorithm::kBubbleSort:
       BubbleSort::Sort(*this);
@@ -72,8 +74,10 @@ void Sorter::Sort() {
       HeapSort::Sort(*this);
       break;
     default:
+      std::cout << "Unknown sorting algorithm selected" << std::endl;
       break;
   }
+  std::cout << "Sorting completed" << std::endl;
   running_ = false;
 }
 
@@ -103,12 +107,12 @@ void Sorter::Randomize() {
 void Sorter::Update(size_t index, Uint32 val) {
   data_[index] = val;
   std::vector<size_t> indexes{index};
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes));
+  Notify(new SortEvent(SortEvent::Type::Update, data_, indexes));
 }
 
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
   std::swap(data_[a], data_[b]);
 
-  Notify(SortEvent(SortEvent::Type::Update, data_, indexes));
+  Notify(new SortEvent(SortEvent::Type::Update, data_, indexes));
 }
