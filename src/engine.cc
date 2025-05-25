@@ -15,6 +15,9 @@ std::ostringstream err_msg;
 Uint32 SDL_SORT_EVENT;
 SDL_sem* event_sem;
 
+int SCREEN_WIDTH = 640;   // 640;
+int SCREEN_HEIGHT = 480;  // 480;
+
 // Global or static pointer to the engine instance for the Emscripten loop
 Engine* g_engine_instance = nullptr;
 
@@ -35,10 +38,11 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     std::cout << "Warning: Linear Texture Filtering not enabled.\n";
   }
 
-  // Modify the window creation to include OpenGL/WebGL context flags
-  window_ = SDL_CreateWindow(
-      "SDL2 Sort", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
-      height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+  window_ =
+      SDL_CreateWindow("SDL2 Sort", SDL_WINDOWPOS_UNDEFINED,
+                       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
+                       SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN |
+                           SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE);
 
   if (nullptr == window_) {
     err_msg << "Could not create window: " << SDL_GetError() << '\n';
@@ -53,9 +57,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
   }
 
   // Get the actual drawable size which might differ due to High DPI
-  int drawable_width, drawable_height;
-  if (SDL_GetRendererOutputSize(renderer_, &drawable_width, &drawable_height) <
-      0) {
+  if (SDL_GetRendererOutputSize(renderer_, &SCREEN_WIDTH, &SCREEN_HEIGHT) < 0) {
     err_msg << "Could not get renderer output size: " << SDL_GetError() << '\n';
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
@@ -73,11 +75,11 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
   }
   event_sem = SDL_CreateSemaphore(10);
 
-  const Uint32 size = 200;
+  const Uint32 size = 150;
 
   screen_ =
-      std::make_shared<Screen>(renderer_, static_cast<Uint32>(drawable_width),
-                               static_cast<Uint32>(drawable_height), size);
+      std::make_shared<Screen>(renderer_, static_cast<Uint32>(SCREEN_WIDTH),
+                               static_cast<Uint32>(SCREEN_HEIGHT));
   sorter_ = std::make_unique<Sorter>(size);
   sorter_->AddObserver(screen_);
 
@@ -134,6 +136,24 @@ void Engine::PollAndHandleSDLEvent() {
       }
       SDL_SemPost(event_sem);
       continue;  // Skip further processing for this event
+    }
+
+    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+      if (SDL_GetRendererOutputSize(renderer_, &SCREEN_WIDTH, &SCREEN_HEIGHT) <
+          0) {
+        err_msg << "Could not get renderer output size: " << SDL_GetError()
+                << '\n';
+        SDL_DestroyRenderer(renderer_);
+        SDL_DestroyWindow(window_);
+        throw std::runtime_error(err_msg.str());
+      }
+
+      // Update the renderer's viewport
+      SDL_RenderSetLogicalSize(renderer_, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+      // Update the screen object dimensions if necessary
+      screen_->Resize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      continue;
     }
 
     if (SDL_QUIT == event.type) {

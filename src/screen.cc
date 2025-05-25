@@ -1,44 +1,33 @@
 #include "screen.h"
 
-#include "diagram/histogram_factory.h"     // Include factory
-#include "diagram/scatter_plot_factory.h"  // Include factory
-
-Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
-               const Uint32 size)
-    : renderer_(renderer), width_(width), height_(height), size_(size) {
+Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height)
+    : renderer_(renderer), width_(width), height_(height) {
   // Initialize with a default diagram using its factory
   HistogramFactory histogram_factory;
-  diagram_ = histogram_factory.CreateDiagram(renderer_, size_, width_, height_);
+  diagram_ = histogram_factory.CreateDiagram();
 }
 
 Screen::~Screen() { renderer_ = nullptr; }
-
-void Screen::set_size(const Uint32 size) {
-  size_ = size;
-  Init();
-}
-
-void Screen::Init() {
-  SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-  SDL_RenderClear(renderer_);
-  diagram_->Init(renderer_, size_, width_, height_);
-  SDL_RenderPresent(renderer_);
-}
 
 void Screen::Update(SortEvent e) {
   switch (e.type) {
     case SortEvent::Type::Update:
       SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
       SDL_RenderClear(renderer_);
-      diagram_->Update(renderer_, e.data, e.indices);
+      diagram_->Render(renderer_, e.data, e.indices, width_, height_);
       SDL_RenderPresent(renderer_);
       break;
     case SortEvent::Type::Init:
-      Init();
+      // Init();
       break;
     default:
       break;
   }
+}
+
+void Screen::Resize(Uint32 width, Uint32 height) {
+  width_ = width;
+  height_ = height;
 }
 
 void Screen::set_diagram(DiagramType diagramType) {
@@ -46,14 +35,12 @@ void Screen::set_diagram(DiagramType diagramType) {
   switch (diagramType) {
     case DiagramType::kHistogram: {
       HistogramFactory histogram_factory;
-      diagram_ =
-          histogram_factory.CreateDiagram(renderer_, size_, width_, height_);
+      diagram_ = histogram_factory.CreateDiagram();
       break;
     }
     case DiagramType::kScatterPlot: {
       ScatterPlotFactory scatter_plot_factory;
-      diagram_ =
-          scatter_plot_factory.CreateDiagram(renderer_, size_, width_, height_);
+      diagram_ = scatter_plot_factory.CreateDiagram();
       break;
     }
     default:
@@ -61,7 +48,6 @@ void Screen::set_diagram(DiagramType diagramType) {
       break;
   }
   // Re-initialize after changing the diagram
-  Init();
 }
 
 Uint32 Screen::width() { return width_; }

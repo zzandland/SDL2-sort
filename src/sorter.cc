@@ -27,7 +27,7 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
-  Notify(new SortEvent(SortEvent::Type::Init));
+  Notify(new SortEvent(SortEvent::Type::Update, data_, std::vector<size_t>{}));
 }
 
 void Sorter::StartAndStop() {

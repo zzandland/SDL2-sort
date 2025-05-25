@@ -5,25 +5,24 @@
 #include <memory>
 
 #include "diagram/diagram.h"
+#include "diagram/histogram_factory.h"
+#include "diagram/scatter_plot_factory.h"
 #include "observer.h"
 
 enum class DiagramType { kScatterPlot, kHistogram };
 
 class Screen : public Observer {
  public:
-  Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height,
-         const Uint32 size);
+  Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height);
   ~Screen();
-  void set_size(const Uint32 size);
-  void Init();
   void Update(SortEvent e);
+  void Resize(Uint32 width, Uint32 height);
   void set_diagram(DiagramType diagramType);
   Uint32 width();
 
  private:
   Uint32 width_;
   Uint32 height_;
-  Uint32 size_;
   SDL_Renderer* renderer_;
   std::unique_ptr<Diagram> diagram_;
 };
