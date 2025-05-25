@@ -1,5 +1,3 @@
-#pragma once
-
 #include "histogram_factory.h"
 
 std::unique_ptr<Diagram> HistogramFactory::CreateDiagram(SDL_Renderer* renderer,

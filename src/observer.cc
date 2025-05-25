@@ -1,12 +1,21 @@
 #include "observer.h"
 
-#include <algorithm>  // For std::remove
+#include <algorithm>
 
-void Observable::Notify(SortEvent event) {
-  for (std::shared_ptr<Observer> observer : observers_) {
-    if (observer != nullptr) {
-      observer->Update(event);
-    }
+void Observable::Notify(SortEvent *event) {
+  SDL_SemWait(event_sem);
+
+  SDL_Event sdl_event;
+  sdl_event.type = SDL_USEREVENT;
+  sdl_event.user.data1 = static_cast<void *>(event);
+  sdl_event.user.data2 = nullptr;
+
+  if (SDL_PushEvent(&sdl_event) < 0) {
+    // Handle the error if needed, e.g., log it
+    // For now, we just print an error message
+    SDL_Log("Failed to push event: %s", SDL_GetError());
+    SDL_SemPost(event_sem);
+    delete event;
   }
 }
 

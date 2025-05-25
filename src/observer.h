@@ -5,6 +5,8 @@
 
 #include "event.h"
 
+extern SDL_sem *event_sem;
+
 class Observer {
  public:
   virtual ~Observer() = default;
@@ -21,7 +23,7 @@ class Observable {
   virtual ~Observable() = default;
 
   // Notify signature changed to pass the event
-  void Notify(SortEvent event);
+  void Notify(SortEvent *event);
 
   // Using raw pointers for attach/detach
   void AddObserver(std::shared_ptr<Observer> observer);
