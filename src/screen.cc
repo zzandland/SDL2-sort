@@ -10,19 +10,10 @@ Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height)
 Screen::~Screen() { renderer_ = nullptr; }
 
 void Screen::Update(SortEvent e) {
-  switch (e.type) {
-    case SortEvent::Type::Update:
-      SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-      SDL_RenderClear(renderer_);
-      diagram_->Render(renderer_, e.data, e.indices, width_, height_);
-      SDL_RenderPresent(renderer_);
-      break;
-    case SortEvent::Type::Init:
-      // Init();
-      break;
-    default:
-      break;
-  }
+  SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderClear(renderer_);
+  diagram_->Render(renderer_, e.data, e.indices, width_, height_);
+  SDL_RenderPresent(renderer_);
 }
 
 void Screen::Resize(Uint32 width, Uint32 height) {

@@ -27,7 +27,8 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
-  Notify(new SortEvent(SortEvent::Type::Update, data_, std::vector<size_t>{}));
+  std::vector<size_t> indexes;
+  Notify(new SortEvent(data_, indexes));
 }
 
 void Sorter::StartAndStop() {
@@ -107,12 +108,12 @@ void Sorter::Randomize() {
 void Sorter::Update(size_t index, Uint32 val) {
   data_[index] = val;
   std::vector<size_t> indexes{index};
-  Notify(new SortEvent(SortEvent::Type::Update, data_, indexes));
+  Notify(new SortEvent(data_, indexes));
 }
 
 void Sorter::Swap(size_t a, size_t b) {
   std::vector<size_t> indexes{a, b};
   std::swap(data_[a], data_[b]);
 
-  Notify(new SortEvent(SortEvent::Type::Update, data_, indexes));
+  Notify(new SortEvent(data_, indexes));
 }

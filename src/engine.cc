@@ -15,8 +15,8 @@ std::ostringstream err_msg;
 Uint32 SDL_SORT_EVENT;
 SDL_sem* event_sem;
 
-int SCREEN_WIDTH = 640;   // 640;
-int SCREEN_HEIGHT = 480;  // 480;
+int SCREEN_WIDTH = 640;
+int SCREEN_HEIGHT = 480;
 
 // Global or static pointer to the engine instance for the Emscripten loop
 Engine* g_engine_instance = nullptr;
@@ -73,7 +73,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     SDL_DestroyWindow(window_);
     throw std::runtime_error(err_msg.str());
   }
-  event_sem = SDL_CreateSemaphore(10);
+  event_sem = SDL_CreateSemaphore(1);
 
   const Uint32 size = 150;
 
