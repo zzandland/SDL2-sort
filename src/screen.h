@@ -7,11 +7,11 @@
 #include "diagram/diagram.h"
 #include "diagram/histogram_factory.h"
 #include "diagram/scatter_plot_factory.h"
-#include "observer.h"
+#include "event.h"
 
 enum class DiagramType { kScatterPlot, kHistogram };
 
-class Screen : public Observer {
+class Screen {
  public:
   Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height);
   ~Screen();

@@ -5,7 +5,7 @@
 #include <thread>
 #include <vector>
 
-#include "observer.h"
+#include "event.h"
 
 enum class Algorithm {
   kBubbleSort,
@@ -16,7 +16,7 @@ enum class Algorithm {
   kHeapSort
 };
 
-class Sorter : public Observable {
+class Sorter {
  public:
   Sorter(size_t size);
   ~Sorter();
@@ -24,6 +24,7 @@ class Sorter : public Observable {
   void StartAndStop();
   void Update(size_t index, Uint32 val);
   void Swap(size_t a, size_t b);
+  void Release();
   void set_selected(Algorithm algorithm);
   Uint32 data(size_t index);
   void set_data(size_t index, Uint32 val);
@@ -34,6 +35,8 @@ class Sorter : public Observable {
 
  private:
   std::vector<Uint32> data_;
+  SDL_semaphore *event_sem_;
+
   size_t size_;
   bool running_;
   std::thread t_;
@@ -42,4 +45,5 @@ class Sorter : public Observable {
   void Init();
   void Sort();
   void Randomize();
+  void Publish(std::unique_ptr<SortEvent> event);
 };

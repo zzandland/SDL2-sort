@@ -12,8 +12,6 @@
 #include "engine.h"
 
 std::ostringstream err_msg;
-Uint32 SDL_SORT_EVENT;
-SDL_sem* event_sem;
 
 int SCREEN_WIDTH = 640;
 int SCREEN_HEIGHT = 480;
@@ -64,24 +62,11 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
-  // Register SDL event type for custom events
-  SDL_SORT_EVENT = SDL_RegisterEvents(1);
-  if (SDL_SORT_EVENT == ((Uint32)-1)) {
-    err_msg << "Could not register custom SDL event: " << SDL_GetError()
-            << '\n';
-    SDL_DestroyRenderer(renderer_);
-    SDL_DestroyWindow(window_);
-    throw std::runtime_error(err_msg.str());
-  }
-  event_sem = SDL_CreateSemaphore(1);
-
   const Uint32 size = 150;
-
   screen_ =
       std::make_shared<Screen>(renderer_, static_cast<Uint32>(SCREEN_WIDTH),
                                static_cast<Uint32>(SCREEN_HEIGHT));
   sorter_ = std::make_unique<Sorter>(size);
-  sorter_->AddObserver(screen_);
 
   g_engine_instance = this;  // Set the global instance
 }
@@ -90,7 +75,6 @@ Engine::~Engine() {
   SDL_DestroyRenderer(renderer_);
   SDL_DestroyWindow(window_);
   window_ = nullptr;
-  SDL_DestroySemaphore(event_sem);
 
   SDL_Quit();
 
@@ -125,17 +109,17 @@ void Engine::MainLoopIteration() {
 void Engine::PollAndHandleSDLEvent() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-    if (SDL_SORT_EVENT == event.type) {
+    if (SDL_USEREVENT == event.type) {
       SortEvent* sort_event = static_cast<SortEvent*>(event.user.data1);
       if (sort_event) {
         screen_->Update(*sort_event);
         delete sort_event;  // Clean up the event after handling
       } else {
-        err_msg << "Received null SortEvent in SDL_SORT_EVENT.\n";
+        err_msg << "Received null SortEvent in SDL_USEREVENT.\n";
         throw std::runtime_error(err_msg.str());
       }
-      SDL_SemPost(event_sem);
-      continue;  // Skip further processing for this event
+      sorter_->Release();
+      continue;
     }
 
     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
