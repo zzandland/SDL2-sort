@@ -62,7 +62,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
-  const Uint32 size = 100;
+  const Uint32 size = 150;
   screen_ =
       std::make_shared<Screen>(renderer_, static_cast<Uint32>(SCREEN_WIDTH),
                                static_cast<Uint32>(SCREEN_HEIGHT));
