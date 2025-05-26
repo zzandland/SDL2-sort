@@ -18,21 +18,26 @@ void MergeSort::InPlaceSort(int l, int r, int m, Sorter &sorter) {
   size_t i = l;      // start of first array
   size_t j = m + 1;  // start of second array
   size_t k = 0;      // running index within the tmp array
-  std::vector<size_t> indexes;
-  for (int h = l; h <= r; ++h) {
-    indexes.push_back(h);
-  }
   int tmp[r - l + 1];
-  while (i <= m || j <= r) {
-    Uint32 lVal = (i <= m) ? sorter.data(i) : UINT_MAX;
-    Uint32 rVal = (j <= r) ? sorter.data(j) : UINT_MAX;
-    if (lVal < rVal) {
+  while (i <= m && j <= r) {
+    if (!sorter.running()) return;
+    if (sorter.Compare(i, j) <= 0) {
       tmp[k++] = sorter.data(i);
       ++i;
     } else {
       tmp[k++] = sorter.data(j);
       ++j;
     }
+  }
+  while (i <= m) {
+    if (!sorter.running()) return;
+    sorter.Color(i, ColorState::SCANNING);
+    tmp[k++] = sorter.data(i++);
+  }
+  while (j <= r) {
+    if (!sorter.running()) return;
+    sorter.Color(j, ColorState::SCANNING);
+    tmp[k++] = sorter.data(j++);
   }
   k = 0;  // reuse the variable for updating the actual data
   while (l + k <= r) {

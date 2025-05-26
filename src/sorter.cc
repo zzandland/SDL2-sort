@@ -9,19 +9,13 @@
 
 Sorter::Sorter(size_t size)
     : running_(false), size_(size), selected_(Algorithm::kBubbleSort) {
-  event_sem_ = SDL_CreateSemaphore(5);
+  event_sem_ = SDL_CreateSemaphore(10);
   Init();
 }
 
 Sorter::~Sorter() {
   SDL_DestroySemaphore(event_sem_);
-  // Ensure the thread is stopped and joined when the Sorter is destroyed
-  if (running_) {
-    running_ = false;
-  }
-  if (t_.joinable()) {
-    t_.join();
-  }
+  Stop();
 }
 
 void Sorter::Init() {
@@ -29,28 +23,26 @@ void Sorter::Init() {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = i + 1;
   }
-  std::vector<size_t> indexes;
-  Publish(std::make_unique<SortEvent>(data_, indexes));
+  Publish(std::make_unique<SortEvent>(data_));
 }
 
-void Sorter::StartAndStop() {
-  if (running_) {
-    // Request the thread to stop
-    running_ = false;
-    // Wait for the thread to finish cleanly
-    if (t_.joinable()) {
-      t_.join();
-    }
-  } else {
-    // Ensure any previous thread is joined before starting a new one
-    // This handles cases where the thread finished but wasn't joined yet
-    if (t_.joinable()) {
-      t_.join();
-    }
-    // Start the new sorting thread
-    running_ = true;
-    Init();
-    t_ = std::thread(&Sorter::Sort, this);
+void Sorter::Start() {
+  // Ensure any previous thread is joined before starting a new one
+  // This handles cases where the thread finished but wasn't joined yet
+  if (t_.joinable()) {
+    t_.join();
+  }
+  // Start the new sorting thread
+  running_ = true;
+  Init();
+  t_ = std::thread(&Sorter::Sort, this);
+}
+
+void Sorter::Stop() {
+  running_ = false;
+  // Wait for the thread to finish cleanly
+  if (t_.joinable()) {
+    t_.join();
   }
 }
 
@@ -85,7 +77,10 @@ void Sorter::Sort() {
   running_ = false;
 }
 
-void Sorter::set_selected(Algorithm algorithm) { selected_ = algorithm; }
+void Sorter::set_selected(Algorithm algorithm) {
+  Stop();
+  selected_ = algorithm;
+}
 
 Uint32 Sorter::data(size_t index) { return data_[index]; }
 
@@ -94,8 +89,6 @@ void Sorter::set_data(size_t index, Uint32 val) { data_[index] = val; }
 size_t Sorter::size() { return size_; }
 
 bool Sorter::running() { return running_; }
-
-void Sorter::toggle_running() { running_ = !running_; }
 
 void Sorter::Randomize() {
   size_t len = data_.size();
@@ -111,14 +104,46 @@ void Sorter::Randomize() {
 void Sorter::Update(size_t index, Uint32 val) {
   data_[index] = val;
   std::vector<size_t> indexes{index};
-  Publish(std::make_unique<SortEvent>(data_, indexes));
+  std::vector<ColorState> colors{ColorState::UPDATING};
+  Publish(std::make_unique<SortEvent>(data_, indexes, colors));
 }
 
 void Sorter::Swap(size_t a, size_t b) {
+  if (a > b) {
+    std::swap(a, b);
+  }
   std::vector<size_t> indexes{a, b};
+  std::vector<ColorState> colors{ColorState::UPDATING, ColorState::UPDATING};
   std::swap(data_[a], data_[b]);
 
-  Publish(std::make_unique<SortEvent>(data_, indexes));
+  Publish(std::make_unique<SortEvent>(data_, indexes, colors));
+}
+
+int Sorter::Compare(size_t a, size_t b) {
+  int compare = 0;
+  if (data_[a] < data_[b]) {
+    compare = -1;  // a is less than b
+  } else if (data_[a] > data_[b]) {
+    compare = 1;  // a is greater than b
+  }
+
+  if (a > b) {
+    std::swap(a, b);
+  }
+  std::vector<size_t> indexes{a, b};
+  std::vector<ColorState> colors{ColorState::SCANNING, ColorState::SCANNING};
+  Publish(std::make_unique<SortEvent>(data_, indexes, colors));
+
+  return compare;  // return comparison result
+}
+
+void Sorter::Color(size_t a, ColorState color) {
+  if (a >= data_.size()) {
+    return;  // Prevent out-of-bounds access
+  }
+  std::vector<size_t> indexes{a};
+  std::vector<ColorState> colors{color};
+  Publish(std::make_unique<SortEvent>(data_, indexes, colors));
 }
 
 void Sorter::Publish(std::unique_ptr<SortEvent> event) {

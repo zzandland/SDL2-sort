@@ -13,7 +13,8 @@ ScatterPlot& ScatterPlot::GetInstance() {
 }
 
 void ScatterPlot::Render(SDL_Renderer* renderer, std::vector<Uint32>& data,
-                         std::vector<size_t>& indexes, Uint32 screen_width,
+                         std::vector<size_t>& indexes,
+                         std::vector<ColorState>& colors, Uint32 screen_width,
                          Uint32 screen_height) {
   SDL_SetRenderDrawColor(renderer, 170, 183, 184, SDL_ALPHA_OPAQUE);
   size_t size = data.size();

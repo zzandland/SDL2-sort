@@ -62,7 +62,7 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
     throw std::runtime_error(err_msg.str());
   }
 
-  const Uint32 size = 150;
+  const Uint32 size = 100;
   screen_ =
       std::make_shared<Screen>(renderer_, static_cast<Uint32>(SCREEN_WIDTH),
                                static_cast<Uint32>(SCREEN_HEIGHT));
@@ -146,6 +146,7 @@ void Engine::PollAndHandleSDLEvent() {
 #if defined(__EMSCRIPTEN__)
         emscripten_cancel_main_loop();
 #endif
+        running_ = false;
         break;
 
       case SDL_KEYDOWN:
@@ -157,7 +158,11 @@ void Engine::PollAndHandleSDLEvent() {
             running_ = false;
             break;
           case SDLK_SPACE:
-            sorter_->StartAndStop();
+            if (sorter_->running()) {
+              sorter_->Stop();
+            } else {
+              sorter_->Start();
+            }
             break;
           case SDLK_1:
             sorter_->set_selected(Algorithm::kBubbleSort);
@@ -188,7 +193,11 @@ void Engine::PollAndHandleSDLEvent() {
         }
         break;
       case SDL_MOUSEBUTTONDOWN:
-        sorter_->StartAndStop();
+        if (sorter_->running()) {
+          sorter_->Stop();
+        } else {
+          sorter_->Start();
+        }
         break;
     }
   }

@@ -11,7 +11,7 @@ Screen::~Screen() { renderer_ = nullptr; }
 void Screen::Update(SortEvent e) {
   SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(renderer_);
-  diagram_->Render(renderer_, e.data, e.indices, width_, height_);
+  diagram_->Render(renderer_, e.data, e.indices, e.colors, width_, height_);
   SDL_RenderPresent(renderer_);
 }
 

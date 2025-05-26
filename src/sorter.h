@@ -21,9 +21,12 @@ class Sorter {
   Sorter(size_t size);
   ~Sorter();
   void PollAndHandleSDLEvent();
-  void StartAndStop();
+  void Start();
+  void Stop();
   void Update(size_t index, Uint32 val);
   void Swap(size_t a, size_t b);
+  int Compare(size_t a, size_t b);
+  void Color(size_t a, ColorState color);
   void Release();
   void set_selected(Algorithm algorithm);
   Uint32 data(size_t index);
@@ -31,7 +34,6 @@ class Sorter {
   size_t size();
   void set_size(const Uint32 size);
   bool running();
-  void toggle_running();
 
  private:
   std::vector<Uint32> data_;

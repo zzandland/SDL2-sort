@@ -15,6 +15,6 @@ class ScatterPlot : public Diagram {
   static ScatterPlot& GetInstance();
 
   void Render(SDL_Renderer* renderer, std::vector<Uint32>& data,
-              std::vector<size_t>& indexes, Uint32 screen_width,
-              Uint32 screen_height) override;
+              std::vector<size_t>& indexes, std::vector<ColorState>& colors,
+              Uint32 screen_width, Uint32 screen_height) override;
 };

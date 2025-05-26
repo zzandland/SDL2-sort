@@ -13,20 +13,18 @@ void QuickSort::Recurse(int l, int r, Sorter &sorter) {
 }
 
 size_t QuickSort::Partition(int l, int r, Sorter &sorter) {
-  Uint32 pivot = sorter.data(r);
-  int i = l - 1;
-  std::vector<size_t> indexes;
-  for (size_t j = l; j <= r; ++j) {
-    indexes.push_back(j);
-  }
+  size_t pivot = r;
+  size_t i = l - 1;
   for (size_t j = l; j < r; ++j) {
     if (!sorter.running()) return 0;
-    if (sorter.data(j) < pivot) {
+    if (sorter.Compare(j, pivot) < 0) {
       ++i;
+      if (!sorter.running()) return 0;
       sorter.Swap(i, j);
     }
   }
   if (i + 1 != r) {
+    if (!sorter.running()) return 0;
     sorter.Swap(i + 1, r);
   }
   return i + 1;
