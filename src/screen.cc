@@ -3,8 +3,7 @@
 Screen::Screen(SDL_Renderer* renderer, const Uint32 width, const Uint32 height)
     : renderer_(renderer), width_(width), height_(height) {
   // Initialize with a default diagram using its factory
-  HistogramFactory histogram_factory;
-  diagram_ = histogram_factory.CreateDiagram();
+  diagram_ = &Histogram::GetInstance();
 }
 
 Screen::~Screen() { renderer_ = nullptr; }
@@ -25,13 +24,11 @@ void Screen::set_diagram(DiagramType diagramType) {
   // Use factories to create diagrams
   switch (diagramType) {
     case DiagramType::kHistogram: {
-      HistogramFactory histogram_factory;
-      diagram_ = histogram_factory.CreateDiagram();
+      diagram_ = &Histogram::GetInstance();
       break;
     }
     case DiagramType::kScatterPlot: {
-      ScatterPlotFactory scatter_plot_factory;
-      diagram_ = scatter_plot_factory.CreateDiagram();
+      diagram_ = &ScatterPlot::GetInstance();
       break;
     }
     default:

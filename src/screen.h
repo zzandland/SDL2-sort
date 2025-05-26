@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "diagram/diagram.h"
-#include "diagram/histogram_factory.h"
-#include "diagram/scatter_plot_factory.h"
+#include "diagram/histogram.h"
+#include "diagram/scatter_plot.h"
 #include "event.h"
 
 enum class DiagramType { kScatterPlot, kHistogram };
@@ -24,5 +24,5 @@ class Screen {
   Uint32 width_;
   Uint32 height_;
   SDL_Renderer* renderer_;
-  std::unique_ptr<Diagram> diagram_;
+  Diagram* diagram_;
 };

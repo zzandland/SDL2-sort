@@ -141,15 +141,16 @@ void Engine::PollAndHandleSDLEvent() {
     }
 
     if (SDL_QUIT == event.type) {
-      // On Emscripten, throwing might not exit cleanly depending on flags.
-      // Consider calling emscripten_cancel_main_loop() or similar.
-#if defined(__EMSCRIPTEN__)
-      emscripten_cancel_main_loop();
-#else
-      throw sdl_exception::EarlyQuit();
-#endif
     }
     switch (event.type) {
+      case SDL_QUIT:
+#if defined(__EMSCRIPTEN__)
+        emscripten_cancel_main_loop();
+#else
+        throw sdl_exception::EarlyQuit();
+#endif
+        break;
+
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case SDLK_SPACE:
@@ -184,7 +185,8 @@ void Engine::PollAndHandleSDLEvent() {
         }
         break;
       case SDL_MOUSEBUTTONDOWN:
-        sorter_->StartAndStop();  // Start or stop sorting on mouse click
+        sorter_->StartAndStop();
+        break;
     }
   }
 }

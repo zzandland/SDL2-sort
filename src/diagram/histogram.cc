@@ -7,6 +7,11 @@
 #include <algorithm>
 #include <iostream>
 
+Histogram& Histogram::GetInstance() {
+  static Histogram instance;
+  return instance;
+}
+
 void Histogram::Render(SDL_Renderer* renderer, std::vector<Uint32>& data,
                        std::vector<size_t>& indexes, Uint32 screen_width,
                        Uint32 screen_height) {

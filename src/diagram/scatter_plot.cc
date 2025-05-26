@@ -7,6 +7,11 @@
 #include <algorithm>  // Required for std::max
 #include <iostream>
 
+ScatterPlot& ScatterPlot::GetInstance() {
+  static ScatterPlot instance;
+  return instance;
+}
+
 void ScatterPlot::Render(SDL_Renderer* renderer, std::vector<Uint32>& data,
                          std::vector<size_t>& indexes, Uint32 screen_width,
                          Uint32 screen_height) {
