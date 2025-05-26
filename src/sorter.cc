@@ -9,7 +9,7 @@
 
 Sorter::Sorter(size_t size)
     : running_(false), size_(size), selected_(Algorithm::kBubbleSort) {
-  event_sem_ = SDL_CreateSemaphore(10);
+  event_sem_ = SDL_CreateSemaphore(5);
   Init();
 }
 
@@ -40,6 +40,18 @@ void Sorter::Start() {
 
 void Sorter::Stop() {
   running_ = false;
+  // Drain all pending events
+  SDL_Event ev;
+  while (SDL_PollEvent(&ev)) {
+    if (ev.type == SDL_USEREVENT) {
+      // clean up the SortEvent pointer we handed to SDL_PushEvent
+      auto* se = static_cast<SortEvent*>(ev.user.data1);
+      delete se;
+      // release the semaphore we waited on in Publish()
+      SDL_SemPost(event_sem_);
+    }
+    // else: ignore other event types
+  }
   // Wait for the thread to finish cleanly
   if (t_.joinable()) {
     t_.join();
@@ -147,11 +159,12 @@ void Sorter::Color(size_t a, ColorState color) {
 }
 
 void Sorter::Publish(std::unique_ptr<SortEvent> event) {
+  SDL_Delay(10);
   SDL_SemWait(event_sem_);
 
   SDL_Event sdl_event;
   sdl_event.type = SDL_USEREVENT;
-  sdl_event.user.data1 = static_cast<void *>(event.release());
+  sdl_event.user.data1 = static_cast<void*>(event.release());
   sdl_event.user.data2 = nullptr;
 
   if (SDL_PushEvent(&sdl_event) < 0) {
