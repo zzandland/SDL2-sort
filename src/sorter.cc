@@ -9,7 +9,7 @@
 
 Sorter::Sorter(size_t size)
     : running_(false), size_(size), selected_(Algorithm::kBubbleSort) {
-  event_sem_ = SDL_CreateSemaphore(1);
+  event_sem_ = SDL_CreateSemaphore(5);
   Init();
 }
 
@@ -49,6 +49,7 @@ void Sorter::StartAndStop() {
     }
     // Start the new sorting thread
     running_ = true;
+    Init();
     t_ = std::thread(&Sorter::Sort, this);
   }
 }

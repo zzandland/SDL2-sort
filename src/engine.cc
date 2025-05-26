@@ -82,6 +82,7 @@ Engine::~Engine() {
 }
 
 void Engine::Run() {
+  running_ = true;
 #if defined(__EMSCRIPTEN__)
   // For Emscripten, set the main loop function
   // The -1 means use browser's requestAnimationFrame
@@ -89,7 +90,7 @@ void Engine::Run() {
   emscripten_set_main_loop(emscripten_main_loop_wrapper, 60, 1);
 #else
   // Native desktop loop
-  while (true) {
+  while (running_) {
     try {
       MainLoopIteration();
       // Add a small delay to prevent high CPU usage on native
@@ -108,12 +109,12 @@ void Engine::MainLoopIteration() {
 
 void Engine::PollAndHandleSDLEvent() {
   SDL_Event event;
-  while (SDL_PollEvent(&event)) {
+  while (running_ && SDL_PollEvent(&event)) {
     if (SDL_USEREVENT == event.type) {
       SortEvent* sort_event = static_cast<SortEvent*>(event.user.data1);
       if (sort_event) {
         screen_->Update(*sort_event);
-        delete sort_event;  // Clean up the event after handling
+        delete sort_event;
       } else {
         err_msg << "Received null SortEvent in SDL_USEREVENT.\n";
         throw std::runtime_error(err_msg.str());
@@ -140,19 +141,21 @@ void Engine::PollAndHandleSDLEvent() {
       continue;
     }
 
-    if (SDL_QUIT == event.type) {
-    }
     switch (event.type) {
       case SDL_QUIT:
 #if defined(__EMSCRIPTEN__)
         emscripten_cancel_main_loop();
-#else
-        throw sdl_exception::EarlyQuit();
 #endif
         break;
 
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
+          case SDLK_ESCAPE:
+#if defined(__EMSCRIPTEN__)
+            emscripten_cancel_main_loop();
+#endif
+            running_ = false;
+            break;
           case SDLK_SPACE:
             sorter_->StartAndStop();
             break;

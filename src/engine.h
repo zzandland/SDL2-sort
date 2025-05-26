@@ -21,6 +21,7 @@ class Engine {
   void MainLoopIteration();
 
  private:
+  bool running_;
   SDL_Renderer* renderer_;
   SDL_Window* window_;
   SDL_GLContext context_;
