@@ -35,7 +35,7 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 cp ./build_wasm/SDL2-sort.js s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.js
-          aws s3 cp ./build_wasm/SDL2-sort.wasm s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.wasm
+          aws s3 cp ./build_wasm/SDL2-sort.js s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.js --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+          aws s3 cp ./build_wasm/SDL2-sort.wasm s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.wasm --cache-control "max-age=0,no-cache,no-store,must-revalidate"
         env:
           AWS_REGION: us-east-1 # Replace with your desired AWS region
