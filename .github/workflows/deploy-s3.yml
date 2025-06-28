@@ -1,0 +1,41 @@
+# .github/workflows/deploy-s3.yml
+name: Deploy WASM to S3
+
+on:
+  release:
+    types: [created] # Trigger on new release creation
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for AWS OIDC
+      contents: read # Required to checkout the code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: emscripten-core/setup-emsdk@v11
+        with:
+          version: "3.1.55" # Or specify another version
+          actions-cache-folder: "emsdk-cache"
+
+      - name: Build WASM
+        run: |
+          chmod +x compile_wasm.sh
+          ./compile_wasm.sh
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }} # Use secrets for account ID and role name
+          aws-region: us-east-1 # Replace with your desired AWS region
+
+      - name: Deploy to S3
+        run: |
+          aws s3 cp ./build_wasm/SDL2-sort.js s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.js
+          aws s3 cp ./build_wasm/SDL2-sort.wasm s3://${{ secrets.AWS_S3_BUCKET_NAME }}/public/projects/SDL2-sort/SDL2-sort.wasm
+        env:
+          AWS_REGION: us-east-1 # Replace with your desired AWS region

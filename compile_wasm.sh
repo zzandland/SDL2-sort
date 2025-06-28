@@ -3,8 +3,10 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# Set the EMSDK environment
-source ~/code/emsdk/emsdk_env.sh
+# Set the EMSDK environment if it's not already set (for local builds)
+if [ -z "$EMSDK" ]; then
+  source ~/code/emsdk/emsdk_env.sh
+fi
 
 # Ensure the build_wasm directory exists
 mkdir -p build_wasm
