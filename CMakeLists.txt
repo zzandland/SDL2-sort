@@ -41,6 +41,7 @@ list(APPEND TARGET_SRC
     src/screen.cc
     src/engine.cc
     src/sorter.cc
+    src/options.cc
     src/main.cc
 )
 

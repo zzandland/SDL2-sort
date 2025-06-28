@@ -1,13 +1,11 @@
 #pragma once
 
 #include <SDL.h>
-
 #include <memory>
-#include <thread>
 
-#include "helper.h"
 #include "screen.h"
 #include "sorter.h"
+#include "options.h"
 
 enum class SDLEventType {
   kNoEvent = 0,
@@ -15,7 +13,7 @@ enum class SDLEventType {
 
 class Engine {
  public:
-  Engine(const Uint32 width, const Uint32 height);
+  Engine(const Uint32 width, const Uint32 height, const ProgramOptions& options);
   ~Engine();
   void Run();
   void MainLoopIteration();

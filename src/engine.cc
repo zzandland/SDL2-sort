@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "engine.h"
+#include "helper.h"
 
 std::ostringstream err_msg;
 
@@ -26,7 +27,8 @@ void emscripten_main_loop_wrapper() {
   }
 }
 
-Engine::Engine(const Uint32 width, const Uint32 height) {
+Engine::Engine(const Uint32 width, const Uint32 height,
+               const ProgramOptions& options) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     err_msg << "Could not initialize SDL: " << SDL_GetError() << '\n';
     throw std::runtime_error(err_msg.str());
@@ -67,6 +69,9 @@ Engine::Engine(const Uint32 width, const Uint32 height) {
       std::make_shared<Screen>(renderer_, static_cast<Uint32>(SCREEN_WIDTH),
                                static_cast<Uint32>(SCREEN_HEIGHT));
   sorter_ = std::make_unique<Sorter>(size);
+
+  sorter_->set_selected(options.algorithm);
+  screen_->set_diagram(options.diagram);
 
   g_engine_instance = this;  // Set the global instance
 }
@@ -163,30 +168,6 @@ void Engine::PollAndHandleSDLEvent() {
             } else {
               sorter_->Start();
             }
-            break;
-          case SDLK_1:
-            sorter_->set_selected(Algorithm::kBubbleSort);
-            break;
-          case SDLK_2:
-            sorter_->set_selected(Algorithm::kInsertionSort);
-            break;
-          case SDLK_3:
-            sorter_->set_selected(Algorithm::kSelectionSort);
-            break;
-          case SDLK_4:
-            sorter_->set_selected(Algorithm::kQuickSort);
-            break;
-          case SDLK_5:
-            sorter_->set_selected(Algorithm::kMergeSort);
-            break;
-          case SDLK_6:
-            sorter_->set_selected(Algorithm::kHeapSort);
-            break;
-          case SDLK_z:
-            screen_->set_diagram(DiagramType::kHistogram);
-            break;
-          case SDLK_x:
-            screen_->set_diagram(DiagramType::kScatterPlot);
             break;
           default:
             break;
